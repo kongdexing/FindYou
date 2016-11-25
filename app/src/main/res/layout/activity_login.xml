@@ -31,6 +31,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/username"
                 android:inputType="textVisiblePassword|textPersonName"
+                android:text="123456"
                 android:textColor="@color/colorWhite"
                 android:textColorHint="@color/transparent_gray"
                 android:textSize="@dimen/sp_16" />
@@ -88,13 +89,15 @@
         android:gravity="center_vertical"
         android:paddingLeft="50dp"
         android:paddingRight="50dp">
+
         <Button
             android:layout_width="match_parent"
             android:layout_height="35dp"
             android:layout_marginRight="5dp"
             android:layout_weight="1"
             android:background="@drawable/btn_bg"
-            android:text="注册" />
+            android:text="注 册"
+            android:textColor="@color/colorAccent" />
 
         <Button
             android:layout_width="match_parent"
@@ -102,27 +105,55 @@
             android:layout_marginLeft="5dp"
             android:layout_weight="1"
             android:background="@drawable/btn_bg"
-            android:text="登录" />
+            android:text="登 录"
+            android:textColor="@color/colorAccent" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/txtForgetPWD"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/layoutOperation"
+        android:layout_gravity="right"
         android:layout_marginRight="50dp"
         android:layout_marginTop="15dp"
-        android:text="忘记密码?"
-        android:textColor="?attr/txt_primary_color" />
+        android:text="忘记密码?" />
+
+    <LinearLayout
+        android:id="@+id/layoutThirdLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_weight="1"
+            android:background="@color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:textColor="@color/colorAccent"
+            android:text="第三方登录" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_weight="1"
+            android:background="@color/white" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/layoutThirdLoginIcons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="70dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
         android:orientation="horizontal">
 
         <ImageView
@@ -142,36 +173,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:src="@mipmap/login_wechat" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layoutThirdLogin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/layoutThirdLoginIcons"
-        android:layout_marginTop="15dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingLeft="50dp"
-        android:paddingRight="50dp">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_weight="1"
-            android:background="@color/white" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:text="第三方登录" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_weight="1"
-            android:background="@color/white" />
     </LinearLayout>
 
 </LinearLayout>
