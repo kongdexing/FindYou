@@ -27,7 +27,7 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login);
     }
 
-    @OnClick({R.id.btnLogin, R.id.btnRegister})
+    @OnClick({R.id.btnLogin, R.id.btnRegister, R.id.txtForgetPWD})
     void viewOnClick(View view) {
         switch (view.getId()) {
             case R.id.btnLogin:
@@ -36,6 +36,9 @@ public class LoginActivity extends BaseActivity {
             case R.id.btnRegister:
                 startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
 //                finish();
+                break;
+            case R.id.txtForgetPWD:
+                startActivity(new Intent(LoginActivity.this, ForgetPwdActivity.class));
                 break;
         }
     }

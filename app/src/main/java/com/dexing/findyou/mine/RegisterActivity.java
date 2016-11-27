@@ -51,11 +51,11 @@ public class RegisterActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.imgDelPhone:
                 edtPhone.setText("");
-                edtPhone.setFocusable(true);
+                edtPhone.requestFocus();
                 break;
             case R.id.imgDelEmail:
                 edtEmail.setText("");
-                edtEmail.setFocusable(true);
+                edtEmail.requestFocus();
                 break;
             case R.id.btnRegister:
                 //验证手机号，邮箱，密码
