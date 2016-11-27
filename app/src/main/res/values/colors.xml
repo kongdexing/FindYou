@@ -5,6 +5,7 @@
     <color name="colorPrimaryTransparent">#ffffff</color>
     <color name="colorPrimary">#12284f</color>
     <color name="colorPrimaryDark">#12284f</color>
+    <color name="colorActionBar">#0a244b</color>
     <color name="colorAccent">#EE8026</color>
     <color name="colorAccent2">#27DEB7</color>
     <color name="colorAccent3">#A0A8CC</color>

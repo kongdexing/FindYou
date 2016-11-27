@@ -9,8 +9,23 @@
 
     <string name="username">用户名</string>
     <string name="userpwd">密码</string>
+    <string name="userpwd_again">确认密码</string>
+
     <string name="forgetpwd">忘记密码</string>
-    <string name="login">登录</string>
+    <string name="login">登 录</string>
     <string name="error_empty_login">请输入用户名或密码</string>
+
+    <!--注册-->
+    <string name="register">注 册</string>
+    <string name="phone">手机号</string>
+    <string name="email">邮箱</string>
+
+
+    <!--toast-->
+    <string name="toast_input_empty">请将信息输入完整</string>
+    <string name="toast_phone_error">手机号格式不正确，请重新输入</string>
+    <string name="toast_email_error">邮箱格式不正确，请重新输入</string>
+    <string name="toast_pwd_notequal">两次输入密码不同</string>
+    <string name="toast_exist_user">该手机号已注册，请重新填写</string>
 
 </resources>
