@@ -1,18 +1,17 @@
-apply plugin: 'com.android.application'
-apply plugin: 'android-apt'
-apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion COMPILE_SDK_VERSION
     buildToolsVersion BUILD_TOOLS_VERSION
 
     defaultConfig {
-        applicationId "com.dexing.findyou"
-        minSdkVersion 17
-        targetSdkVersion 25
+        minSdkVersion 14
+        targetSdkVersion 24
         versionCode 1
         versionName "1.0"
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
     }
     buildTypes {
         release {
@@ -27,9 +26,8 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.0.0'
+    provided 'com.android.support:appcompat-v7:24.2.1'
+    provided 'com.android.support:support-v13:24.2.1'
+    provided 'com.android.support:recyclerview-v7:24.2.1'
     testCompile 'junit:junit:4.12'
-    //bmob-sdk
-    compile 'cn.bmob.android:bmob-sdk:3.5.3'
-    apt 'com.jakewharton:butterknife-compiler:8.0.1'
 }
