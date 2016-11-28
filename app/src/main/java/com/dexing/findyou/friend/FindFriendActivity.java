@@ -8,6 +8,7 @@ import android.widget.ListView;
 
 import com.dexing.findyou.BaseActivity;
 import com.dexing.findyou.R;
+import com.dexing.findyou.bean.FriendRelation;
 import com.dexing.findyou.bean.User;
 
 import java.util.ArrayList;
@@ -16,8 +17,10 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.datatype.BmobQueryResult;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.SQLQueryListener;
 
 public class FindFriendActivity extends BaseActivity {
 
@@ -59,12 +62,15 @@ public class FindFriendActivity extends BaseActivity {
         mainQuery.or(ors);
         mainQuery.findObjects(new FindListener<User>() {
             @Override
-            public void done(List<User> object, BmobException e) {
+            public void done(List<User> users, BmobException e) {
                 if (e == null) {
+                    if (users.size() == 0) {
+                        toast("暂无该用户信息，请重新搜索");
+                        return;
+                    }
                     //去好友关系中查找
 
-
-                    toast("年龄为29或者6岁人的个数：" + object.size());
+                    toast("年龄为29或者6岁人的个数：" + users.size());
                 } else {
                     loge(e);
                 }
@@ -72,6 +78,20 @@ public class FindFriendActivity extends BaseActivity {
 
         });
 
+    }
+
+    private void queryFriendRelation(String fromUser, String toUsers) {
+        String sql = String.format("select * from FriendRelation where fromUser = %s and toUser in (%s)", fromUser, toUsers);
+
+        BmobQuery<FriendRelation> mainQuery = new BmobQuery<FriendRelation>();
+        mainQuery.setSQL(sql);
+        mainQuery.doSQLQuery(sql, new SQLQueryListener<FriendRelation>() {
+
+            @Override
+            public void done(BmobQueryResult<FriendRelation> bmobQueryResult, BmobException e) {
+
+            }
+        });
     }
 
 }

@@ -3,6 +3,8 @@ package com.dexing.findyou.util;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,6 +14,11 @@ import java.util.regex.Pattern;
  */
 
 public class CommonUtil {
+
+    public static String getCurrentDate() {
+        SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        return sDateFormat.format(new java.util.Date());
+    }
 
     // 判断是否为手机号
     public static boolean isPhone(String inputText) {

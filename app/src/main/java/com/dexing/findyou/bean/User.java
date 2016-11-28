@@ -14,6 +14,7 @@ import org.greenrobot.greendao.annotation.Generated;
 public class User extends BmobUser{
 
     private boolean gpsPush = true;
+    //头像，昵称，性别，出生日期，
 
     @Generated(hash = 785176253)
     public User(boolean gpsPush) {
