@@ -53,7 +53,7 @@ public class LoginActivity extends BaseActivity {
                     edtAccount.setFocusable(true);
                     return;
                 }
-                toLogin(phone, CommonUtil.md5(pwd));
+                toLogin(phone, pwd);
                 break;
             case R.id.btnRegister:
                 startActivityForResult(new Intent(LoginActivity.this, RegisterActivity.class), 1);

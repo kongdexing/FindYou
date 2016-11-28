@@ -87,7 +87,7 @@ public class RegisterActivity extends BaseActivity {
                     edtPwd.setSelection(pwd.length());
                     return;
                 }
-                toSignUp(phone, email, CommonUtil.md5(pwd));
+                toSignUp(phone, email, pwd);
                 break;
         }
     }
@@ -142,7 +142,7 @@ public class RegisterActivity extends BaseActivity {
                     toast("注册成功");
                     //保存数据
                     SharedPreferencesUtil.saveData(RegisterActivity.this, SharedPreferencesUtil.KEY_LOGIN_NAME, myUser.getMobilePhoneNumber());
-                    SharedPreferencesUtil.saveData(RegisterActivity.this, SharedPreferencesUtil.KEY_PWD, CommonUtil.md5(edtPwd.getText().toString().trim()));
+                    SharedPreferencesUtil.saveData(RegisterActivity.this, SharedPreferencesUtil.KEY_PWD, edtPwd.getText().toString().trim());
                     setResult(1);
                     finish();
                 } else {
