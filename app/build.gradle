@@ -27,10 +27,12 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.0.0'
-    testCompile 'junit:junit:4.12'
     //bmob-sdk
+    compile project(':pager-bottom-tab-strip')
+    compile 'com.android.support:appcompat-v7:25.0.0'
     compile 'cn.bmob.android:bmob-sdk:3.5.3'
     compile 'com.jakewharton:butterknife:8.0.1'
+    compile 'com.android.support:support-v4:25.0.0'
+    testCompile 'junit:junit:4.12'
     apt 'com.jakewharton:butterknife-compiler:8.0.1'
 }

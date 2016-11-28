@@ -61,6 +61,12 @@ public class BaseActivity extends AppCompatActivity {
         unbinder = ButterKnife.bind(this);
     }
 
+    public void showImgBack(boolean show) {
+        if (imgBack != null) {
+            imgBack.setVisibility(show ? View.VISIBLE : View.GONE);
+        }
+    }
+
     /**
      * 解决Subscription内存泄露问题
      *

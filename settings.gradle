@@ -1,1 +1,1 @@
-include ':app', ':volley', ':widget'
+include ':app', ':volley', ':widget', ':pager-bottom-tab-strip'

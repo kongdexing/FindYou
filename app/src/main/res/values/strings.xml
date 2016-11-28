@@ -28,4 +28,7 @@
     <string name="toast_pwd_notequal">两次输入密码不同</string>
     <string name="toast_exist_user">该手机号已注册，请重新填写</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

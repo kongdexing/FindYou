@@ -9,7 +9,7 @@
         <item name="android:windowBackground">@color/window_bg</item>
         <item name="android:navigationBarColor">@color/colorPrimary</item>
         <item name="android:textColorSecondary">@color/text_black</item>
-        <item name="android:textColor">@color/text_black</item>
+        <item name="android:textColor">@color/transparent_gray</item>
     </style>
     <style name="AppTheme.ScrollTranslate" parent="AppTheme">
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>

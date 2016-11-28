@@ -9,7 +9,9 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.dexing.findyou.BaseActivity;
+import com.dexing.findyou.MainActivity;
 import com.dexing.findyou.R;
+import com.dexing.findyou.SplashActivity;
 import com.dexing.findyou.util.CommonUtil;
 import com.dexing.findyou.util.SharedPreferencesUtil;
 
@@ -68,6 +70,7 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == 1) {
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -98,6 +101,8 @@ public class LoginActivity extends BaseActivity {
                 toast("登陆成功");
                 SharedPreferencesUtil.saveData(LoginActivity.this, SharedPreferencesUtil.KEY_LOGIN_NAME, name);
                 SharedPreferencesUtil.saveData(LoginActivity.this, SharedPreferencesUtil.KEY_PWD, pwd);
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                finish();
             }
         });
     }
