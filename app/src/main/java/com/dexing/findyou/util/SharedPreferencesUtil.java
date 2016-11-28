@@ -6,11 +6,11 @@ import android.content.SharedPreferences;
 public class SharedPreferencesUtil {
 
     private static final String FILE_NAME = "com.xing.find";
-    public static final String KEY_TOKEN = "token";
-    public static final String KEY_LOGIN_NAME = "loginName";
+//    public static final String KEY_Id = "objectId";
+//    public static final String KEY_LOGIN_NAME = "loginName";
     public static final String KEY_PWD = "password";
-    public static final String KEY_EMAIL = "email";
-    public static final String KEY_USER_NAME = "username";
+//    public static final String KEY_EMAIL = "email";
+//    public static final String KEY_USER_NAME = "username";
 
     /**
      * 保存数据到文件

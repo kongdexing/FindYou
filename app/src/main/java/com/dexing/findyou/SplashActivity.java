@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
+import com.dexing.findyou.bean.GreenDaoHelper;
+import com.dexing.findyou.bean.User;
 import com.dexing.findyou.mine.LoginActivity;
 import com.dexing.findyou.util.SharedPreferencesUtil;
 
@@ -22,21 +24,21 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        String userName = (String) SharedPreferencesUtil.getData(SplashActivity.this, SharedPreferencesUtil.KEY_LOGIN_NAME, "");
-        String password = (String) SharedPreferencesUtil.getData(SplashActivity.this, SharedPreferencesUtil.KEY_PWD, "");
-        if (userName.isEmpty() || password.isEmpty()) {
+        User user = GreenDaoHelper.getInstance().getCurrentUser();
+        String password = (String) SharedPreferencesUtil.getData(this, SharedPreferencesUtil.KEY_PWD, "");
+        if (user == null || user.getUsername().isEmpty() || password.isEmpty()) {
             toLoginActivity();
         } else {
-            toLogin(userName, password);
+            toLogin(user.getUsername(), password);
         }
     }
 
     private void toLogin(final String name, final String pwd) {
-        final BmobUser bu2 = new BmobUser();
+        final User bu2 = new User();
         bu2.setUsername(name);
         bu2.setPassword(pwd);
         //login回调
-        bu2.loginObservable(BmobUser.class).subscribe(new Subscriber<BmobUser>() {
+        bu2.loginObservable(User.class).subscribe(new Subscriber<User>() {
             @Override
             public void onCompleted() {
             }
@@ -47,14 +49,15 @@ public class SplashActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onNext(BmobUser bmobUser) {
+            public void onNext(User bmobUser) {
+                GreenDaoHelper.getInstance().insertUser(bmobUser);
                 startActivity(new Intent(SplashActivity.this, MainActivity.class));
                 finish();
             }
         });
     }
 
-    private void toLoginActivity(){
+    private void toLoginActivity() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

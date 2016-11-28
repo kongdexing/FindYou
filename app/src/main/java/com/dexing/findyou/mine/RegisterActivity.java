@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.dexing.findyou.BaseActivity;
 import com.dexing.findyou.R;
+import com.dexing.findyou.bean.GreenDaoHelper;
 import com.dexing.findyou.bean.User;
 import com.dexing.findyou.util.CommonUtil;
 import com.dexing.findyou.util.SharedPreferencesUtil;
@@ -141,7 +142,7 @@ public class RegisterActivity extends BaseActivity {
                 if (e == null) {
                     toast("注册成功");
                     //保存数据
-                    SharedPreferencesUtil.saveData(RegisterActivity.this, SharedPreferencesUtil.KEY_LOGIN_NAME, myUser.getMobilePhoneNumber());
+                    GreenDaoHelper.getInstance().insertUser(myUser);
                     SharedPreferencesUtil.saveData(RegisterActivity.this, SharedPreferencesUtil.KEY_PWD, edtPwd.getText().toString().trim());
                     setResult(1);
                     finish();

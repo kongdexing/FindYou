@@ -20,6 +20,7 @@
     <string name="phone">手机号</string>
     <string name="email">邮箱</string>
 
+    <string name="title_find">添加</string>
 
     <!--toast-->
     <string name="toast_input_empty">请将信息输入完整</string>
@@ -27,6 +28,8 @@
     <string name="toast_email_error">邮箱格式不正确，请重新输入</string>
     <string name="toast_pwd_notequal">两次输入密码不同</string>
     <string name="toast_exist_user">该手机号已注册，请重新填写</string>
+    <string name="toast_friendname_empty">请输入要查找的手机号或邮箱</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

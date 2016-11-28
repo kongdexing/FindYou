@@ -41,7 +41,9 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".BaseActivity" />
         <activity android:name=".mine.RegisterActivity" />
-        <activity android:name=".mine.ForgetPwdActivity"></activity>
+        <activity android:name=".mine.ForgetPwdActivity" />
+        <activity android:name=".friend.FindFriendActivity"
+            android:label="@string/title_find"></activity>
     </application>
 
 </manifest>

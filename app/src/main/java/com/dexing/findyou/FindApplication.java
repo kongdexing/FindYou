@@ -2,6 +2,8 @@ package com.dexing.findyou;
 
 import android.app.Application;
 
+import com.dexing.findyou.bean.GreenDaoHelper;
+
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobConfig;
 
@@ -36,6 +38,7 @@ public class FindApplication extends Application {
         //第二：默认初始化
 //        Bmob.initialize(this, APPID, "demo");
 
+        GreenDaoHelper.getInstance().initGreenDao(this);
 
     }
 

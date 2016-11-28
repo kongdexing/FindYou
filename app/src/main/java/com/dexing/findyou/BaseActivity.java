@@ -68,6 +68,41 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     /**
+     * 设置ActionBar名称
+     *
+     * @param strId
+     */
+    public void setTitle(int strId) {
+        setTitle(getResources().getString(strId));
+    }
+
+    /**
+     * 设置ActionBar名称
+     *
+     * @param str
+     */
+    public void setTitle(String str) {
+        if (txtTitle != null) {
+            txtTitle.setText(str);
+        }
+    }
+
+    public void setTxtRight(int strId) {
+        setTxtRight(getResources().getString(strId));
+    }
+
+    public void setTxtRight(String str) {
+        if (txtRight != null) {
+            txtRight.setText(str);
+        }
+    }
+
+    public void setTextRightClickListener(View.OnClickListener listener) {
+        if (txtRight != null)
+            txtRight.setOnClickListener(listener);
+    }
+
+    /**
      * 解决Subscription内存泄露问题
      *
      * @param s

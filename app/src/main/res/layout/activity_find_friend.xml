@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_find_friend"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.dexing.findyou.friend.FindFriendActivity">
+
+    <RelativeLayout
+        android:id="@+id/rlSend"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_50">
+
+        <EditText
+            android:id="@+id/edtFriend"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/dp_5"
+            android:layout_toLeftOf="@+id/btnSearch"
+            android:background="@drawable/chat_input_bg"
+            android:padding="@dimen/dp_5"
+            android:hint="@string/toast_friendname_empty"
+            android:textColor="@color/colorWhite"
+            android:textColorHint="@color/transparent_gray"
+            android:textSize="@dimen/sp_14" />
+
+        <Button
+            android:id="@+id/btnSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_margin="@dimen/dp_5"
+            android:background="@drawable/btn_bg"
+            android:text="@string/btn_search"
+            android:textColor="@color/colorAccent" />
+
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:transcriptMode="normal" />
+
+</LinearLayout>

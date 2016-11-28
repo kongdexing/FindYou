@@ -12,6 +12,8 @@ import com.dexing.findyou.BaseActivity;
 import com.dexing.findyou.MainActivity;
 import com.dexing.findyou.R;
 import com.dexing.findyou.SplashActivity;
+import com.dexing.findyou.bean.GreenDaoHelper;
+import com.dexing.findyou.bean.User;
 import com.dexing.findyou.util.CommonUtil;
 import com.dexing.findyou.util.SharedPreferencesUtil;
 
@@ -77,12 +79,12 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void toLogin(final String name, final String pwd) {
-        final BmobUser bu2 = new BmobUser();
+        final User bu2 = new User();
         bu2.setUsername(name);
         bu2.setPassword(pwd);
         //login回调
         progressBar.setVisibility(View.VISIBLE);
-        bu2.loginObservable(BmobUser.class).subscribe(new Subscriber<BmobUser>() {
+        bu2.loginObservable(User.class).subscribe(new Subscriber<User>() {
             @Override
             public void onCompleted() {
                 log("----onCompleted----");
@@ -96,10 +98,10 @@ public class LoginActivity extends BaseActivity {
             }
 
             @Override
-            public void onNext(BmobUser bmobUser) {
+            public void onNext(User bmobUser) {
                 progressBar.setVisibility(View.GONE);
                 toast("登陆成功");
-                SharedPreferencesUtil.saveData(LoginActivity.this, SharedPreferencesUtil.KEY_LOGIN_NAME, name);
+                GreenDaoHelper.getInstance().insertUser(bmobUser);
                 SharedPreferencesUtil.saveData(LoginActivity.this, SharedPreferencesUtil.KEY_PWD, pwd);
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 finish();
