@@ -19,4 +19,6 @@ public class User extends BmobUser{
     public void setGpsPush(boolean gpsPush) {
         this.gpsPush = gpsPush;
     }
+
+
 }

@@ -12,6 +12,7 @@ import com.dexing.findyou.BaseActivity;
 import com.dexing.findyou.R;
 import com.dexing.findyou.bean.User;
 import com.dexing.findyou.util.CommonUtil;
+import com.dexing.findyou.util.SharedPreferencesUtil;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
 import rx.Subscriber;
@@ -85,7 +87,7 @@ public class RegisterActivity extends BaseActivity {
                     edtPwd.setSelection(pwd.length());
                     return;
                 }
-                toSignUp(phone, email, pwd);
+                toSignUp(phone, email, CommonUtil.md5(pwd));
                 break;
         }
     }
@@ -109,42 +111,42 @@ public class RegisterActivity extends BaseActivity {
         } else {
             bmobQuery.setCachePolicy(BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);    // 如果没有缓存的话，则先从网络中取
         }
+        addSubscription(bmobQuery.findObjects(new FindListener<User>() {
 
-        bmobQuery.findObjectsObservable(User.class)
-                .subscribe(new Subscriber<List<User>>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
+            @Override
+            public void done(List<User> persons, BmobException e) {
+                if (e == null) {
+                    if (persons.size() == 0) {
+                        insertUser(myUser);
+                    } else {
                         progress.setVisibility(View.GONE);
-                        toast("注册失败");
-                        loge(e);
+                        toast(R.string.toast_exist_user);
+                        edtPhone.requestFocus();
+                        edtPhone.setSelection(phone.length());
                     }
-
-                    @Override
-                    public void onNext(List<User> persons) {
-                        if (persons.size() == 0) {
-                            insertUser(myUser);
-                        } else {
-                            progress.setVisibility(View.GONE);
-                            toast(R.string.toast_exist_user);
-                            edtPhone.requestFocus();
-                            edtPhone.setSelection(phone.length());
-                        }
-                    }
-                });
+                } else {
+                    progress.setVisibility(View.GONE);
+                    toast("注册失败");
+                    loge(e);
+                }
+            }
+        }));
     }
 
-    private void insertUser(User myUser) {
+    private void insertUser(final User myUser) {
         addSubscription(myUser.signUp(new SaveListener<User>() {
             @Override
             public void done(User s, BmobException e) {
                 progress.setVisibility(View.GONE);
                 if (e == null) {
-                    toast("注册成功:" + s.toString());
+                    toast("注册成功");
+                    //保存数据
+                    SharedPreferencesUtil.saveData(RegisterActivity.this, SharedPreferencesUtil.KEY_LOGIN_NAME, myUser.getMobilePhoneNumber());
+                    SharedPreferencesUtil.saveData(RegisterActivity.this, SharedPreferencesUtil.KEY_PWD, CommonUtil.md5(edtPwd.getText().toString().trim()));
+                    setResult(1);
+                    finish();
                 } else {
+                    toast("注册失败");
                     loge(e);
                 }
             }

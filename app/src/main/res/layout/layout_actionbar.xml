@@ -9,7 +9,7 @@
         android:id="@+id/img_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/dp_15"
+        android:padding="@dimen/dp_12"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/dp_15"
         android:layout_marginRight="@dimen/dp_15"
@@ -23,7 +23,7 @@
         android:layout_centerVertical="true"
         android:lines="1"
         android:text="FIND"
-        android:textColor="@android:color/white"
+        android:textColor="@color/transparent_gray"
         android:textSize="18sp" />
 
     <TextView
