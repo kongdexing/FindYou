@@ -20,6 +20,7 @@
             android:layout_toLeftOf="@+id/btnSearch"
             android:background="@drawable/chat_input_bg"
             android:padding="@dimen/dp_5"
+            android:lines="1"
             android:hint="@string/toast_friendname_empty"
             android:textColor="@color/colorWhite"
             android:textColorHint="@color/transparent_gray"

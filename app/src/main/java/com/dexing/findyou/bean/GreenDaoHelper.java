@@ -49,6 +49,7 @@ public class GreenDaoHelper {
     public void insertUser(FUser user) {
         if (writeDaoSession != null) {
             clearData();
+            user.setUserId(user.getObjectId());
             writeDaoSession.getFUserDao().insert(user);
 
         }

@@ -79,6 +79,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void toLogin(final String name, final String pwd) {
+        progressBar.setVisibility(View.VISIBLE);
         //判断用户是否存在
         BmobQuery<FUser> bmobQuery = new BmobQuery<FUser>();
         bmobQuery.addWhereEqualTo("loginName", name);
@@ -87,20 +88,19 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void done(List<FUser> list, BmobException e) {
+                progressBar.setVisibility(View.GONE);
                 if (e == null) {
                     if (list.size() > 0) {
-                        progressBar.setVisibility(View.GONE);
                         toast("登陆成功");
+                        log(list.get(0).getObjectId());
                         GreenDaoHelper.getInstance().insertUser(list.get(0));
                         startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         finish();
                     } else {
-                        progressBar.setVisibility(View.GONE);
                         loge(new BmobException(e));
                         toast("登陆失败，用户名或密码错误");
                     }
                 } else {
-                    progressBar.setVisibility(View.GONE);
                     loge(new BmobException(e));
                     toast("登陆失败");
                 }

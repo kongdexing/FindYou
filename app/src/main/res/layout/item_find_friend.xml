@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorActionBar"
     android:paddingBottom="@dimen/dp_5"
     android:paddingTop="@dimen/dp_5">
 
@@ -16,17 +17,34 @@
         android:src="@drawable/user_defaulthead" />
 
     <LinearLayout
+        android:id="@+id/llMiddle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/llRight"
+        android:layout_toRightOf="@+id/imgHead"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtUserName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/llRight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/dp_5"
+        android:layout_marginRight="@dimen/dp_10"
         android:orientation="vertical">
 
         <Button
             android:id="@+id/btnRequest"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/dp_70"
             android:layout_height="35dp"
             android:background="@drawable/btn_bg"
             android:text="添加"
@@ -39,23 +57,6 @@
             android:layout_gravity="center"
             android:text="已请求"
             android:visibility="gone" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/llMiddle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/dp_10"
-        android:orientation="vertical"
-        android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/imgHead">
-
-        <TextView
-            android:id="@+id/txtUserName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="" />
 
     </LinearLayout>
 

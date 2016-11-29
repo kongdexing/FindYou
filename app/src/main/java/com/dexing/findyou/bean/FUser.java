@@ -19,7 +19,7 @@ import java.util.Date;
 public class FUser extends BmobObject {
 
     //登录名，密码，手机号，邮箱，头像，昵称，性别，出生日期，地理位置，方位
-
+    private String userId;
     private String loginName;
     private String password;
     private String phoneNum;
@@ -31,6 +31,7 @@ public class FUser extends BmobObject {
     private boolean gpsPush = true;
 
     public FUser() {
+        this.userId = getObjectId();
         this.loginName = "";
         this.password = "";
         this.phoneNum = "";
@@ -41,10 +42,11 @@ public class FUser extends BmobObject {
         this.birthday = "";
     }
 
-    @Generated(hash = 801768181)
-    public FUser(String loginName, String password, String phoneNum, String email,
-            String headImg, String nickName, int sex, String birthday,
-            boolean gpsPush) {
+    @Generated(hash = 1964713576)
+    public FUser(String userId, String loginName, String password, String phoneNum,
+                 String email, String headImg, String nickName, int sex,
+                 String birthday, boolean gpsPush) {
+        this.userId = userId;
         this.loginName = loginName;
         this.password = password;
         this.phoneNum = phoneNum;
@@ -130,6 +132,14 @@ public class FUser extends BmobObject {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getUserId() {
+        return this.userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
 

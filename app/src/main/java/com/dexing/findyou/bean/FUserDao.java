@@ -22,15 +22,16 @@ public class FUserDao extends AbstractDao<FUser, Void> {
      * Can be used for QueryBuilder and for referencing column names.
     */
     public static class Properties {
-        public final static Property LoginName = new Property(0, String.class, "loginName", false, "LOGIN_NAME");
-        public final static Property Password = new Property(1, String.class, "password", false, "PASSWORD");
-        public final static Property PhoneNum = new Property(2, String.class, "phoneNum", false, "PHONE_NUM");
-        public final static Property Email = new Property(3, String.class, "email", false, "EMAIL");
-        public final static Property HeadImg = new Property(4, String.class, "headImg", false, "HEAD_IMG");
-        public final static Property NickName = new Property(5, String.class, "nickName", false, "NICK_NAME");
-        public final static Property Sex = new Property(6, int.class, "sex", false, "SEX");
-        public final static Property Birthday = new Property(7, String.class, "birthday", false, "BIRTHDAY");
-        public final static Property GpsPush = new Property(8, boolean.class, "gpsPush", false, "GPS_PUSH");
+        public final static Property UserId = new Property(0, String.class, "userId", false, "USER_ID");
+        public final static Property LoginName = new Property(1, String.class, "loginName", false, "LOGIN_NAME");
+        public final static Property Password = new Property(2, String.class, "password", false, "PASSWORD");
+        public final static Property PhoneNum = new Property(3, String.class, "phoneNum", false, "PHONE_NUM");
+        public final static Property Email = new Property(4, String.class, "email", false, "EMAIL");
+        public final static Property HeadImg = new Property(5, String.class, "headImg", false, "HEAD_IMG");
+        public final static Property NickName = new Property(6, String.class, "nickName", false, "NICK_NAME");
+        public final static Property Sex = new Property(7, int.class, "sex", false, "SEX");
+        public final static Property Birthday = new Property(8, String.class, "birthday", false, "BIRTHDAY");
+        public final static Property GpsPush = new Property(9, boolean.class, "gpsPush", false, "GPS_PUSH");
     };
 
 
@@ -46,15 +47,16 @@ public class FUserDao extends AbstractDao<FUser, Void> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"FUSER\" (" + //
-                "\"LOGIN_NAME\" TEXT," + // 0: loginName
-                "\"PASSWORD\" TEXT," + // 1: password
-                "\"PHONE_NUM\" TEXT," + // 2: phoneNum
-                "\"EMAIL\" TEXT," + // 3: email
-                "\"HEAD_IMG\" TEXT," + // 4: headImg
-                "\"NICK_NAME\" TEXT," + // 5: nickName
-                "\"SEX\" INTEGER NOT NULL ," + // 6: sex
-                "\"BIRTHDAY\" TEXT," + // 7: birthday
-                "\"GPS_PUSH\" INTEGER NOT NULL );"); // 8: gpsPush
+                "\"USER_ID\" TEXT," + // 0: userId
+                "\"LOGIN_NAME\" TEXT," + // 1: loginName
+                "\"PASSWORD\" TEXT," + // 2: password
+                "\"PHONE_NUM\" TEXT," + // 3: phoneNum
+                "\"EMAIL\" TEXT," + // 4: email
+                "\"HEAD_IMG\" TEXT," + // 5: headImg
+                "\"NICK_NAME\" TEXT," + // 6: nickName
+                "\"SEX\" INTEGER NOT NULL ," + // 7: sex
+                "\"BIRTHDAY\" TEXT," + // 8: birthday
+                "\"GPS_PUSH\" INTEGER NOT NULL );"); // 9: gpsPush
     }
 
     /** Drops the underlying database table. */
@@ -67,84 +69,94 @@ public class FUserDao extends AbstractDao<FUser, Void> {
     protected final void bindValues(DatabaseStatement stmt, FUser entity) {
         stmt.clearBindings();
  
+        String userId = entity.getUserId();
+        if (userId != null) {
+            stmt.bindString(1, userId);
+        }
+ 
         String loginName = entity.getLoginName();
         if (loginName != null) {
-            stmt.bindString(1, loginName);
+            stmt.bindString(2, loginName);
         }
  
         String password = entity.getPassword();
         if (password != null) {
-            stmt.bindString(2, password);
+            stmt.bindString(3, password);
         }
  
         String phoneNum = entity.getPhoneNum();
         if (phoneNum != null) {
-            stmt.bindString(3, phoneNum);
+            stmt.bindString(4, phoneNum);
         }
  
         String email = entity.getEmail();
         if (email != null) {
-            stmt.bindString(4, email);
+            stmt.bindString(5, email);
         }
  
         String headImg = entity.getHeadImg();
         if (headImg != null) {
-            stmt.bindString(5, headImg);
+            stmt.bindString(6, headImg);
         }
  
         String nickName = entity.getNickName();
         if (nickName != null) {
-            stmt.bindString(6, nickName);
+            stmt.bindString(7, nickName);
         }
-        stmt.bindLong(7, entity.getSex());
+        stmt.bindLong(8, entity.getSex());
  
         String birthday = entity.getBirthday();
         if (birthday != null) {
-            stmt.bindString(8, birthday);
+            stmt.bindString(9, birthday);
         }
-        stmt.bindLong(9, entity.getGpsPush() ? 1L: 0L);
+        stmt.bindLong(10, entity.getGpsPush() ? 1L: 0L);
     }
 
     @Override
     protected final void bindValues(SQLiteStatement stmt, FUser entity) {
         stmt.clearBindings();
  
+        String userId = entity.getUserId();
+        if (userId != null) {
+            stmt.bindString(1, userId);
+        }
+ 
         String loginName = entity.getLoginName();
         if (loginName != null) {
-            stmt.bindString(1, loginName);
+            stmt.bindString(2, loginName);
         }
  
         String password = entity.getPassword();
         if (password != null) {
-            stmt.bindString(2, password);
+            stmt.bindString(3, password);
         }
  
         String phoneNum = entity.getPhoneNum();
         if (phoneNum != null) {
-            stmt.bindString(3, phoneNum);
+            stmt.bindString(4, phoneNum);
         }
  
         String email = entity.getEmail();
         if (email != null) {
-            stmt.bindString(4, email);
+            stmt.bindString(5, email);
         }
  
         String headImg = entity.getHeadImg();
         if (headImg != null) {
-            stmt.bindString(5, headImg);
+            stmt.bindString(6, headImg);
         }
  
         String nickName = entity.getNickName();
         if (nickName != null) {
-            stmt.bindString(6, nickName);
+            stmt.bindString(7, nickName);
         }
-        stmt.bindLong(7, entity.getSex());
+        stmt.bindLong(8, entity.getSex());
  
         String birthday = entity.getBirthday();
         if (birthday != null) {
-            stmt.bindString(8, birthday);
+            stmt.bindString(9, birthday);
         }
-        stmt.bindLong(9, entity.getGpsPush() ? 1L: 0L);
+        stmt.bindLong(10, entity.getGpsPush() ? 1L: 0L);
     }
 
     @Override
@@ -155,30 +167,32 @@ public class FUserDao extends AbstractDao<FUser, Void> {
     @Override
     public FUser readEntity(Cursor cursor, int offset) {
         FUser entity = new FUser( //
-            cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0), // loginName
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // password
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // phoneNum
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // email
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // headImg
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // nickName
-            cursor.getInt(offset + 6), // sex
-            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // birthday
-            cursor.getShort(offset + 8) != 0 // gpsPush
+            cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0), // userId
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // loginName
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // password
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // phoneNum
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // email
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // headImg
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // nickName
+            cursor.getInt(offset + 7), // sex
+            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // birthday
+            cursor.getShort(offset + 9) != 0 // gpsPush
         );
         return entity;
     }
      
     @Override
     public void readEntity(Cursor cursor, FUser entity, int offset) {
-        entity.setLoginName(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
-        entity.setPassword(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setPhoneNum(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setEmail(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setHeadImg(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setNickName(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-        entity.setSex(cursor.getInt(offset + 6));
-        entity.setBirthday(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
-        entity.setGpsPush(cursor.getShort(offset + 8) != 0);
+        entity.setUserId(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
+        entity.setLoginName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setPassword(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setPhoneNum(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setEmail(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setHeadImg(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setNickName(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
+        entity.setSex(cursor.getInt(offset + 7));
+        entity.setBirthday(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
+        entity.setGpsPush(cursor.getShort(offset + 9) != 0);
      }
     
     @Override
