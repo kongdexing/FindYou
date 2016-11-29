@@ -1,7 +1,6 @@
 package com.dexing.findyou.mine;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -11,17 +10,18 @@ import android.widget.Toast;
 import com.dexing.findyou.BaseActivity;
 import com.dexing.findyou.MainActivity;
 import com.dexing.findyou.R;
-import com.dexing.findyou.SplashActivity;
+import com.dexing.findyou.bean.FUser;
 import com.dexing.findyou.bean.GreenDaoHelper;
-import com.dexing.findyou.bean.User;
 import com.dexing.findyou.util.CommonUtil;
 import com.dexing.findyou.util.SharedPreferencesUtil;
 
+import java.util.List;
+
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 import rx.Subscriber;
 
 public class LoginActivity extends BaseActivity {
@@ -57,7 +57,7 @@ public class LoginActivity extends BaseActivity {
                     edtAccount.setFocusable(true);
                     return;
                 }
-                toLogin(phone, pwd);
+                toLogin(phone, CommonUtil.md5(pwd));
                 break;
             case R.id.btnRegister:
                 startActivityForResult(new Intent(LoginActivity.this, RegisterActivity.class), 1);
@@ -79,34 +79,34 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void toLogin(final String name, final String pwd) {
-        final User bu2 = new User();
-        bu2.setUsername(name);
-        bu2.setPassword(pwd);
-        //login回调
-        progressBar.setVisibility(View.VISIBLE);
-        bu2.loginObservable(User.class).subscribe(new Subscriber<User>() {
-            @Override
-            public void onCompleted() {
-                log("----onCompleted----");
-            }
+        //判断用户是否存在
+        BmobQuery<FUser> bmobQuery = new BmobQuery<FUser>();
+        bmobQuery.addWhereEqualTo("loginName", name);
+        bmobQuery.addWhereEqualTo("password", pwd);
+        addSubscription(bmobQuery.findObjects(new FindListener<FUser>() {
 
             @Override
-            public void onError(Throwable e) {
-                progressBar.setVisibility(View.GONE);
-                loge(new BmobException(e));
-                toast("登陆失败");
+            public void done(List<FUser> list, BmobException e) {
+                if (e == null) {
+                    if (list.size() > 0) {
+                        progressBar.setVisibility(View.GONE);
+                        toast("登陆成功");
+                        GreenDaoHelper.getInstance().insertUser(list.get(0));
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        finish();
+                    } else {
+                        progressBar.setVisibility(View.GONE);
+                        loge(new BmobException(e));
+                        toast("登陆失败，用户名或密码错误");
+                    }
+                } else {
+                    progressBar.setVisibility(View.GONE);
+                    loge(new BmobException(e));
+                    toast("登陆失败");
+                }
             }
+        }));
 
-            @Override
-            public void onNext(User bmobUser) {
-                progressBar.setVisibility(View.GONE);
-                toast("登陆成功");
-                GreenDaoHelper.getInstance().insertUser(bmobUser);
-                SharedPreferencesUtil.saveData(LoginActivity.this, SharedPreferencesUtil.KEY_PWD, pwd);
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                finish();
-            }
-        });
     }
 
 

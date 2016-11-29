@@ -3,9 +3,6 @@ package com.dexing.findyou.bean;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by dexing on 2016/11/2.
  */
@@ -45,21 +42,21 @@ public class GreenDaoHelper {
 
     public void clearData() {
         if (writeDaoSession != null) {
-            writeDaoSession.getUserDao().deleteAll();
+            writeDaoSession.getFUserDao().deleteAll();
         }
     }
 
-    public void insertUser(User user) {
+    public void insertUser(FUser user) {
         if (writeDaoSession != null) {
             clearData();
-            writeDaoSession.getUserDao().insert(user);
+            writeDaoSession.getFUserDao().insert(user);
 
         }
     }
 
-    public User getCurrentUser() {
+    public FUser getCurrentUser() {
         if (readDaoSession != null) {
-            return readDaoSession.getUserDao().queryBuilder().unique();
+            return readDaoSession.getFUserDao().queryBuilder().unique();
         }
         return null;
     }

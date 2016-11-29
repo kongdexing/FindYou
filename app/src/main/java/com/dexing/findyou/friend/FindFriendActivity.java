@@ -1,6 +1,5 @@
 package com.dexing.findyou.friend;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -8,8 +7,10 @@ import android.widget.ListView;
 
 import com.dexing.findyou.BaseActivity;
 import com.dexing.findyou.R;
+import com.dexing.findyou.bean.FUser;
 import com.dexing.findyou.bean.FriendRelation;
-import com.dexing.findyou.bean.User;
+import com.dexing.findyou.bean.GreenDaoHelper;
+import com.dexing.findyou.model.FriendResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,10 +31,16 @@ public class FindFriendActivity extends BaseActivity {
     @BindView(R.id.edtFriend)
     EditText edtFriend;
 
+    FindResultAdapter adapter;
+    private List<FriendResult> listResult = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_friend);
+
+        adapter = new FindResultAdapter(this);
+        listview.setAdapter(adapter);
     }
 
     @OnClick({R.id.btnSearch})
@@ -51,27 +58,48 @@ public class FindFriendActivity extends BaseActivity {
     }
 
     private void queryFriends(String name) {
-        BmobQuery<User> or1 = new BmobQuery<User>();
-        or1.addWhereMatches("mobilePhoneNumber", name);
-        BmobQuery<User> or2 = new BmobQuery<User>();
-        or2.addWhereMatches("email", name);
-        List<BmobQuery<User>> ors = new ArrayList<BmobQuery<User>>();
+        listResult.clear();
+        BmobQuery<FUser> or1 = new BmobQuery<FUser>();
+        or1.addWhereMatches("phoneNum", name);
+        BmobQuery<FUser> or2 = new BmobQuery<FUser>();
+        or1.addWhereMatches("email", name);
+        BmobQuery<FUser> or3 = new BmobQuery<FUser>();
+        or1.addWhereMatches("nickName", name);
+        List<BmobQuery<FUser>> ors = new ArrayList<BmobQuery<FUser>>();
         ors.add(or1);
         ors.add(or2);
-        BmobQuery<User> mainQuery = new BmobQuery<User>();
+        ors.add(or3);
+
+        BmobQuery<FUser> mainQuery = new BmobQuery<FUser>();
         mainQuery.or(ors);
-        mainQuery.findObjects(new FindListener<User>() {
+        mainQuery.findObjects(new FindListener<FUser>() {
             @Override
-            public void done(List<User> users, BmobException e) {
+            public void done(List<FUser> users, BmobException e) {
                 if (e == null) {
                     if (users.size() == 0) {
                         toast("暂无该用户信息，请重新搜索");
+                        adapter.clearList();
                         return;
                     }
                     //去好友关系中查找
-
-                    toast("年龄为29或者6岁人的个数：" + users.size());
+                    StringBuilder findIds = new StringBuilder();
+                    for (int i = 0; i < users.size(); i++) {
+                        FUser user = users.get(i);
+                        findIds.append(user.getObjectId() + ",");
+                        FriendResult result = new FriendResult();
+                        result.setObjectId(user.getObjectId());
+                        result.setUserName(user.getNickName());
+                        result.setBirthday(user.getBirthday());
+                        result.setHeadImg(user.getHeadImg());
+                        result.setSex(user.getSex());
+                        result.setFriendStatus(-1);
+                        listResult.add(result);
+                    }
+                    queryFriendRelation(GreenDaoHelper.getInstance().getCurrentUser().getObjectId(),
+                            findIds.substring(findIds.length() - 1).toString());
                 } else {
+                    adapter.clearList();
+                    toast(e.getMessage());
                     loge(e);
                 }
             }
@@ -82,16 +110,35 @@ public class FindFriendActivity extends BaseActivity {
 
     private void queryFriendRelation(String fromUser, String toUsers) {
         String sql = String.format("select * from FriendRelation where fromUser = %s and toUser in (%s)", fromUser, toUsers);
-
+        log(sql);
         BmobQuery<FriendRelation> mainQuery = new BmobQuery<FriendRelation>();
         mainQuery.setSQL(sql);
         mainQuery.doSQLQuery(sql, new SQLQueryListener<FriendRelation>() {
 
             @Override
             public void done(BmobQueryResult<FriendRelation> bmobQueryResult, BmobException e) {
-
+                if (e == null) {
+                    List<FriendRelation> listFriend = bmobQueryResult.getResults();
+                    if (listFriend.size() == 0) {
+                        for (int i = 0; i < listFriend.size(); i++) {
+                            FriendRelation relation = listFriend.get(i);
+                            for (int j = 0; j < listResult.size(); j++) {
+                                if (relation.getToUser().equals(listResult.get(j).getObjectId())) {
+                                    //修改好友关系状态
+                                    listResult.get(j).setFriendStatus(relation.getStatus());
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                bindResult();
             }
         });
+    }
+
+    private void bindResult() {
+        adapter.setListResult(listResult);
     }
 
 }

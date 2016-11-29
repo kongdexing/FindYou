@@ -14,7 +14,7 @@ public class FriendRelation extends BmobObject {
     private int status;
     private String groupName;
     private boolean isCare;
-    private boolean visiableGPS;
+    private boolean visibilityGPS;
     private String remark;
 
     public String getFromUser() {
@@ -57,12 +57,12 @@ public class FriendRelation extends BmobObject {
         isCare = care;
     }
 
-    public boolean isVisiableGPS() {
-        return visiableGPS;
+    public boolean isVisibilityGPS() {
+        return visibilityGPS;
     }
 
-    public void setVisiableGPS(boolean visiableGPS) {
-        this.visiableGPS = visiableGPS;
+    public void setVisibilityGPS(boolean visibilityGPS) {
+        this.visibilityGPS = visibilityGPS;
     }
 
     public String getRemark() {

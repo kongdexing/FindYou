@@ -1,8 +1,8 @@
 package com.dexing.findyou.mine;
 
 import android.annotation.SuppressLint;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -11,9 +11,9 @@ import android.widget.Toast;
 
 import com.dexing.findyou.BaseActivity;
 import com.dexing.findyou.R;
+import com.dexing.findyou.bean.FUser;
 import com.dexing.findyou.bean.GreenDaoHelper;
 import com.dexing.findyou.bean.SmsSendStatus;
-import com.dexing.findyou.bean.User;
 import com.dexing.findyou.util.CommonUtil;
 import com.dexing.findyou.util.SharedPreferencesUtil;
 
@@ -29,7 +29,6 @@ import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
-import rx.Subscriber;
 
 public class RegisterActivity extends BaseActivity {
 
@@ -57,7 +56,7 @@ public class RegisterActivity extends BaseActivity {
         setContentView(R.layout.activity_register);
     }
 
-    @OnClick({R.id.imgDelPhone, R.id.imgDelEmail, R.id.btnRegister, R.id.txtSendStatus})
+    @OnClick({R.id.imgDelPhone, R.id.btnRegister, R.id.txtSendStatus})
     void viewOnClick(View view) {
         switch (view.getId()) {
             case R.id.imgDelPhone:
@@ -78,10 +77,10 @@ public class RegisterActivity extends BaseActivity {
             case R.id.btnRegister:
                 //验证手机号，邮箱，密码
                 phone = edtPhone.getText().toString().trim();
-                String email = edtCode.getText().toString().trim();
+                String code = edtCode.getText().toString().trim();
                 String pwd = edtPwd.getText().toString().trim();
                 String pwdAgain = edtPwdAgain.getText().toString().trim();
-                if (phone.isEmpty() || email.isEmpty() || pwd.isEmpty() || pwdAgain.isEmpty()) {
+                if (phone.isEmpty() || code.isEmpty() || pwd.isEmpty() || pwdAgain.isEmpty()) {
                     Toast.makeText(this, R.string.toast_input_empty, Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -91,19 +90,13 @@ public class RegisterActivity extends BaseActivity {
                     edtPhone.setFocusable(true);
                     return;
                 }
-                if (!CommonUtil.isEmail(email)) {
-                    Toast.makeText(this, R.string.toast_email_error, Toast.LENGTH_SHORT).show();
-                    edtEmail.setSelection(email.length());
-                    edtEmail.setFocusable(true);
-                    return;
-                }
 
                 if (!pwd.equals(pwdAgain)) {
                     Toast.makeText(this, R.string.toast_pwd_notequal, Toast.LENGTH_SHORT).show();
                     edtPwd.setSelection(pwd.length());
                     return;
                 }
-                toSignUp(phone, email, pwd);
+                toSignUp(phone, code, CommonUtil.md5(pwd));
                 break;
         }
     }
@@ -172,31 +165,28 @@ public class RegisterActivity extends BaseActivity {
     }
 
     @SuppressLint("UseValueOf")
-    private void toSignUp(final String phone, String email, String pwd) {
-        final User myUser = new User();
-        myUser.setUsername(phone);
-        myUser.setMobilePhoneNumber(phone);
-        myUser.setEmail(email);
-        myUser.setPassword(pwd);
+    private void toSignUp(final String phone, String code, final String pwd) {
+        Log.i(TAG, "toSignUp: ");
+
         progress.setVisibility(View.VISIBLE);
 
         //判断用户是否存在
-        BmobQuery<User> bmobQuery = new BmobQuery<User>();
-        bmobQuery.addWhereEqualTo("username", phone);
+        BmobQuery<FUser> bmobQuery = new BmobQuery<FUser>();
+        bmobQuery.addWhereEqualTo("phoneNum", phone);
         //先判断是否有缓存
-        boolean isCache = bmobQuery.hasCachedResult(User.class);
+        boolean isCache = bmobQuery.hasCachedResult(FUser.class);
         if (isCache) {
             bmobQuery.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);    // 先从缓存取数据，如果没有的话，再从网络取。
         } else {
             bmobQuery.setCachePolicy(BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);    // 如果没有缓存的话，则先从网络中取
         }
-        addSubscription(bmobQuery.findObjects(new FindListener<User>() {
+        addSubscription(bmobQuery.findObjects(new FindListener<FUser>() {
 
             @Override
-            public void done(List<User> persons, BmobException e) {
+            public void done(List<FUser> persons, BmobException e) {
                 if (e == null) {
                     if (persons.size() == 0) {
-                        insertUser(myUser);
+                        insertUser(phone, pwd);
                     } else {
                         progress.setVisibility(View.GONE);
                         toast(R.string.toast_exist_user);
@@ -204,32 +194,50 @@ public class RegisterActivity extends BaseActivity {
                         edtPhone.setSelection(phone.length());
                     }
                 } else {
-                    progress.setVisibility(View.GONE);
-                    toast("注册失败");
-                    loge(e);
+                    if (e.getErrorCode() == 9009) {
+                        //没有缓存数据
+                        insertUser(phone, pwd);
+                    } else {
+                        progress.setVisibility(View.GONE);
+                        toast("注册失败");
+                        loge(e);
+                    }
                 }
             }
         }));
     }
 
-    private void insertUser(final User myUser) {
-        addSubscription(myUser.signUp(new SaveListener<User>() {
+    private void insertUser(final String phone, final String pwd) {
+        Log.i(TAG, "insertUser: ");
+        final FUser myUser = new FUser();
+        myUser.setLoginName(phone);
+        myUser.setPhoneNum(phone);
+        myUser.setNickName(phone);
+        myUser.setPassword(pwd);
+        myUser.save(new SaveListener<String>() {
             @Override
-            public void done(User s, BmobException e) {
+            public void done(String s, BmobException e) {
                 progress.setVisibility(View.GONE);
                 if (e == null) {
-                    toast("注册成功");
-                    //保存数据
-                    GreenDaoHelper.getInstance().insertUser(myUser);
-                    SharedPreferencesUtil.saveData(RegisterActivity.this, SharedPreferencesUtil.KEY_PWD, edtPwd.getText().toString().trim());
-                    setResult(1);
-                    finish();
+                    registerSuccess(myUser);
                 } else {
-                    toast("注册失败");
-                    loge(e);
+                    if (e.getErrorCode() == 100) {
+
+                    } else {
+                        toast("注册失败");
+                        loge(e);
+                    }
                 }
             }
-        }));
+        });
+    }
+
+    private void registerSuccess(FUser myUser) {
+        toast("注册成功");
+        //保存数据
+        GreenDaoHelper.getInstance().insertUser(myUser);
+        setResult(1);
+        finish();
     }
 
 }

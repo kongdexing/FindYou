@@ -8,7 +8,7 @@ public class SharedPreferencesUtil {
     private static final String FILE_NAME = "com.xing.find";
 //    public static final String KEY_Id = "objectId";
 //    public static final String KEY_LOGIN_NAME = "loginName";
-    public static final String KEY_PWD = "password";
+//    public static final String KEY_PWD = "password";
 //    public static final String KEY_EMAIL = "email";
 //    public static final String KEY_USER_NAME = "username";
 

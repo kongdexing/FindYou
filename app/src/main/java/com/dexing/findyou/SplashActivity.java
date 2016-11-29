@@ -5,56 +5,61 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 
+import com.dexing.findyou.bean.FUser;
 import com.dexing.findyou.bean.GreenDaoHelper;
-import com.dexing.findyou.bean.User;
 import com.dexing.findyou.mine.LoginActivity;
 import com.dexing.findyou.util.SharedPreferencesUtil;
 
-import butterknife.BindView;
-import cn.bmob.v3.BmobUser;
+import java.util.List;
+
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 import rx.Subscriber;
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-
-        User user = GreenDaoHelper.getInstance().getCurrentUser();
-        String password = (String) SharedPreferencesUtil.getData(this, SharedPreferencesUtil.KEY_PWD, "");
-        if (user == null || user.getUsername().isEmpty() || password.isEmpty()) {
+        setTitleVisibility(View.GONE);
+        
+        FUser user = GreenDaoHelper.getInstance().getCurrentUser();
+        if (user == null || user.getLoginName().isEmpty() || user.getPassword().isEmpty()) {
             toLoginActivity();
         } else {
-            toLogin(user.getUsername(), password);
+            toLogin(user.getLoginName(), user.getPassword());
         }
     }
 
     private void toLogin(final String name, final String pwd) {
-        final User bu2 = new User();
-        bu2.setUsername(name);
+        final FUser bu2 = new FUser();
+        bu2.setLoginName(name);
         bu2.setPassword(pwd);
-        //login回调
-        bu2.loginObservable(User.class).subscribe(new Subscriber<User>() {
-            @Override
-            public void onCompleted() {
-            }
+
+        BmobQuery<FUser> bmobQuery = new BmobQuery<FUser>();
+        bmobQuery.addWhereEqualTo("loginName", name);
+        bmobQuery.addWhereEqualTo("password", pwd);
+        addSubscription(bmobQuery.findObjects(new FindListener<FUser>() {
 
             @Override
-            public void onError(Throwable e) {
-                toLoginActivity();
+            public void done(List<FUser> list, BmobException e) {
+                if (e == null) {
+                    if (list.size() > 0) {
+                        GreenDaoHelper.getInstance().insertUser(list.get(0));
+                        startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                        finish();
+                    } else {
+                        toLoginActivity();
+                    }
+                } else {
+                    toLoginActivity();
+                }
             }
+        }));
 
-            @Override
-            public void onNext(User bmobUser) {
-                GreenDaoHelper.getInstance().insertUser(bmobUser);
-                startActivity(new Intent(SplashActivity.this, MainActivity.class));
-                finish();
-            }
-        });
     }
 
     private void toLoginActivity() {

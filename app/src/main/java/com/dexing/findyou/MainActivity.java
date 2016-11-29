@@ -31,6 +31,8 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         showImgBack(false);
+        showImgHead(true);
+
         initFragment();
 
         MainFragmentAdapter mAdapter = new MainFragmentAdapter(getSupportFragmentManager(), mFragments);

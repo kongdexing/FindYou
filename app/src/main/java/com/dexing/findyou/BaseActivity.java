@@ -1,6 +1,7 @@
 package com.dexing.findyou;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.support.annotation.LayoutRes;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,7 +15,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.widget.view.CircularImageView;
+import com.dexing.findyou.bean.GreenDaoHelper;
+import com.dexing.findyou.mine.LoginActivity;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.bmob.v3.exception.BmobException;
 import rx.Subscription;
@@ -23,10 +30,19 @@ import rx.subscriptions.CompositeSubscription;
 public class BaseActivity extends AppCompatActivity {
 
     public static String TAG = "";
-    public LinearLayout llContent;  //主视图
-    private RelativeLayout llActionBar;  //ActionBar
-    private ImageView imgBack;
-    private TextView txtTitle, txtRight;
+    @BindView(R.id.llContent)
+    LinearLayout llContent;  //主视图
+    @BindView(R.id.includeActionBar)
+    RelativeLayout llActionBar;  //ActionBar
+    @BindView(R.id.img_back)
+    ImageView imgBack;
+    @BindView(R.id.txtTitle)
+    TextView txtTitle;
+    @BindView(R.id.txtRight)
+    TextView txtRight;
+    @BindView(R.id.imgHead)
+    CircularImageView imgHead;
+
     private Dialog progressDialog;
     public Unbinder unbinder;
     private CompositeSubscription mCompositeSubscription;
@@ -42,28 +58,39 @@ public class BaseActivity extends AppCompatActivity {
         super.setContentView(layoutResID);
         View contentView = LayoutInflater.from(this).inflate(layoutResID, null, false);
         View parentView = LayoutInflater.from(this).inflate(R.layout.activity_base, null, true);
-
-        llActionBar = (RelativeLayout) parentView.findViewById(R.id.includeActionBar);
-        imgBack = (ImageView) parentView.findViewById(R.id.img_back);
-        imgBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-        txtTitle = (TextView) parentView.findViewById(R.id.txtTitle);
-        txtRight = (TextView) parentView.findViewById(R.id.txtRight);
         llContent = (LinearLayout) parentView.findViewById(R.id.llContent);
-
-        txtTitle.setText(this.getTitle());
         llContent.addView(contentView);
         setContentView(parentView);
         unbinder = ButterKnife.bind(this);
+        txtTitle.setText(this.getTitle());
+    }
+
+    @OnClick({R.id.img_back, R.id.imgHead})
+    void onActionBarClick(View view) {
+        switch (view.getId()) {
+            case R.id.img_back:
+                onBackPressed();
+                break;
+            case R.id.imgHead:
+                if (GreenDaoHelper.getInstance().getCurrentUser() == null) {
+
+                } else {
+
+                }
+                startActivity(new Intent(BaseActivity.this, LoginActivity.class));
+                break;
+        }
     }
 
     public void showImgBack(boolean show) {
         if (imgBack != null) {
             imgBack.setVisibility(show ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    public void showImgHead(boolean show) {
+        if (imgHead != null) {
+            imgHead.setVisibility(show ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -84,6 +111,12 @@ public class BaseActivity extends AppCompatActivity {
     public void setTitle(String str) {
         if (txtTitle != null) {
             txtTitle.setText(str);
+        }
+    }
+
+    public void setTitleVisibility(int visibility) {
+        if (txtTitle != null) {
+            txtTitle.setVisibility(visibility);
         }
     }
 
