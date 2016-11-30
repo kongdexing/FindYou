@@ -11,11 +11,19 @@ public class FriendRelation extends BmobObject {
 
     private String fromUser;
     private String toUser;
+    //（1同意，0未同意，-1未请求）
     private int status;
     private String groupName;
     private boolean isCare;
     private boolean visibilityGPS;
     private String remark;
+
+    public FriendRelation() {
+        isCare = false;
+        visibilityGPS = true;
+        groupName = "好友";
+        remark = "";
+    }
 
     public String getFromUser() {
         return fromUser;

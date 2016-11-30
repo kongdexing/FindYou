@@ -58,6 +58,13 @@
             android:text="已请求"
             android:visibility="gone" />
 
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_30"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+
     </LinearLayout>
 
 </RelativeLayout>
