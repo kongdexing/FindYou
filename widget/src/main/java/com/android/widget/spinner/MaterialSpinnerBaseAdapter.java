@@ -59,7 +59,13 @@ public abstract class MaterialSpinnerBaseAdapter<T> extends BaseAdapter {
         } else {
             textView = ((ViewHolder) convertView.getTag()).textView;
         }
-        textView.setText(getItem(position).toString());
+        Object item = getItem(position);
+        if (item instanceof String) {
+            textView.setText(item.toString());
+        } else if (item instanceof SpinnerModel) {
+            textView.setText(((SpinnerModel) item).getName());
+        }
+
         return convertView;
     }
 

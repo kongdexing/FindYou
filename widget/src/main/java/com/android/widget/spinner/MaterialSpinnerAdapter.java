@@ -20,34 +20,39 @@ package com.android.widget.spinner;
 import android.content.Context;
 
 import java.util.List;
+import java.util.StringTokenizer;
 
-public class MaterialSpinnerAdapter<T> extends MaterialSpinnerBaseAdapter {
+public class MaterialSpinnerAdapter<SpinnerModel> extends MaterialSpinnerBaseAdapter {
 
-  private final List<T> items;
+    private final List<SpinnerModel> items;
 
-  public MaterialSpinnerAdapter(Context context, List<T> items) {
-    super(context);
-    this.items = items;
-  }
-
-  @Override public int getCount() {
-    return items.size() - 1;
-  }
-
-  @Override public T getItem(int position) {
-    if (position >= getSelectedIndex()) {
-      return items.get(position + 1);
-    } else {
-      return items.get(position);
+    public MaterialSpinnerAdapter(Context context, List<SpinnerModel> items) {
+        super(context);
+        this.items = items;
     }
-  }
 
-  @Override public T get(int position) {
-    return items.get(position);
-  }
+    @Override
+    public int getCount() {
+        return items.size() - 1;
+    }
 
-  @Override public List<T> getItems() {
-    return items;
-  }
+    @Override
+    public Object getItem(int position) {
+        if (position >= getSelectedIndex()) {
+            return items.get(position + 1);
+        } else {
+            return items.get(position);
+        }
+    }
+
+    @Override
+    public SpinnerModel get(int position) {
+        return items.get(position);
+    }
+
+    @Override
+    public List<SpinnerModel> getItems() {
+        return items;
+    }
 
 }

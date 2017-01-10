@@ -48,14 +48,14 @@ public class MultipartRequest extends Request<String> {
                 String fileName = mFilePathList.get(i);
                 File file = new File(fileName);
                 FileBody fileBody = new FileBody(file);
-                builder.addPart("pic"+i, fileBody);
+                builder.addPart("pic" + i, fileBody);
                 Log.i("volley", "upload file " + fileName);
             }
             Log.i("volley", "upload params " + mParams.toString());
             Iterator iterator = mParams.keySet().iterator();
             while (iterator.hasNext()) {
                 Object key = iterator.next();
-                builder.addTextBody(key.toString(),mParams.get(key), ContentType.APPLICATION_JSON);
+                builder.addTextBody(key.toString(), mParams.get(key), ContentType.APPLICATION_JSON);
             }
             return builder.build();
         } catch (Exception e) {
@@ -75,8 +75,8 @@ public class MultipartRequest extends Request<String> {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try {
             mHttpEntity.writeTo(bos);
-        } catch (IOException e) {
-            VolleyLog.e("IOException writing to ByteArrayOutputStream");
+        } catch (Exception e) {
+            VolleyLog.e("IOException writing to ByteArrayOutputStream " + e.getMessage());
         }
         return bos.toByteArray();
     }

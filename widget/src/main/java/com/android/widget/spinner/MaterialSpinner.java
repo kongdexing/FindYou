@@ -156,7 +156,11 @@ public class MaterialSpinner extends TextView {
                 nothingSelected = false;
                 Object item = adapter.get(position);
                 adapter.notifyItemSelected(position);
-                setText(item.toString());
+                if (item instanceof String) {
+                    setText(item.toString());
+                } else if (item instanceof SpinnerModel) {
+                    setText(((SpinnerModel) item).getName());
+                }
 
                 collapse();
                 if (onItemSelectedListener != null) {
@@ -268,7 +272,13 @@ public class MaterialSpinner extends TextView {
             Bundle bundle = (Bundle) savedState;
             selectedIndex = bundle.getInt("selected_index");
             if (adapter != null) {
-                setText(adapter.get(selectedIndex).toString());
+                Object item = adapter.get(selectedIndex);
+                if (item instanceof String) {
+                    setText(item.toString());
+                } else if (item instanceof SpinnerModel) {
+                    setText(((SpinnerModel) item).getName());
+                }
+
                 adapter.notifyItemSelected(selectedIndex);
             }
             if (bundle.getBoolean("is_popup_showing")) {
@@ -303,6 +313,13 @@ public class MaterialSpinner extends TextView {
         return selectedIndex;
     }
 
+    public Object getSelectedItem() {
+        if (adapter != null) {
+            return adapter.getItems().get(selectedIndex);
+        }
+        return null;
+    }
+
     /**
      * Set the default spinner item using its index
      *
@@ -313,7 +330,12 @@ public class MaterialSpinner extends TextView {
             if (position >= 0 && position <= adapter.getCount()) {
                 adapter.notifyItemSelected(position);
                 selectedIndex = position;
-                setText(adapter.get(position).toString());
+                Object item = adapter.get(selectedIndex);
+                if (item instanceof String) {
+                    setText(item.toString());
+                } else if (item instanceof SpinnerModel) {
+                    setText(((SpinnerModel) item).getName());
+                }
             } else {
                 throw new IllegalArgumentException("Position must be lower than adapter count!");
             }
@@ -394,7 +416,12 @@ public class MaterialSpinner extends TextView {
         if (selectedIndex >= numberOfItems) {
             selectedIndex = 0;
         }
-        setText(adapter.get(selectedIndex).toString());
+        Object item = adapter.get(selectedIndex);
+        if (item instanceof String) {
+            setText(item.toString());
+        } else if (item instanceof SpinnerModel) {
+            setText(((SpinnerModel) item).getName());
+        }
     }
 
     /**
@@ -405,14 +432,15 @@ public class MaterialSpinner extends TextView {
             animateArrow(true);
         }
         nothingSelected = true;
+        int[] location = new int[2];
+        getLocationOnScreen(location);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             popupWindow.setOverlapAnchor(false);
-            popupWindow.showAsDropDown(this);
+            popupWindow.showAsDropDown(this, location[0], 3);
         } else {
-            int[] location = new int[2];
-            getLocationOnScreen(location);
             int x = location[0];
-            int y = getHeight() + location[1];
+            int y = getHeight() + location[1] + 3;
             popupWindow.showAtLocation(this, Gravity.TOP | Gravity.START, x, y);
         }
     }

@@ -23,9 +23,6 @@ import java.util.Map;
 
 import ch.boye.httpclientandroidlib.impl.client.cache.CacheConfig;
 
-/**
- * Created by Administrator on 2016/10/18 0018.
- */
 public class VolleyHttpService {
 
     private String TAG = VolleyHttpService.class.getSimpleName();

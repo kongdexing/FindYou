@@ -236,7 +236,7 @@ public class LoadMoreRecyclerView extends RecyclerView {
 
     /**
      * 切换layoutManager
-     *
+     * <p>
      * 为了保证切换之后页面上还是停留在当前展示的位置，记录下切换之前的第一条展示位置，切换完成之后滚动到该位置
      * 另外切换之后必须要重新刷新下当前已经缓存的itemView，否则会出现布局错乱（俩种模式下的item布局不同），
      * RecyclerView提供了swapAdapter来进行切换adapter并清理老的itemView cache
@@ -334,6 +334,7 @@ public class LoadMoreRecyclerView extends RecyclerView {
 
     /**
      * 设置头部view是否展示
+     *
      * @param enable
      */
     public void setHeaderEnable(boolean enable) {
@@ -351,7 +352,7 @@ public class LoadMoreRecyclerView extends RecyclerView {
 
     /**
      * 通知更多的数据已经加载
-     *
+     * <p>
      * 每次加载完成之后添加了Data数据，用notifyItemRemoved来刷新列表展示，
      * 而不是用notifyDataSetChanged来刷新列表
      *
@@ -359,19 +360,23 @@ public class LoadMoreRecyclerView extends RecyclerView {
      */
     public void notifyMoreFinish(boolean hasMore) {
         setAutoLoadMoreEnable(hasMore);
-        if (mLoadMorePosition==0) {
+        if (mLoadMorePosition == 0) {
             mLoadMorePosition = getAdapter().getItemCount();
         }
         getAdapter().notifyItemRemoved(mLoadMorePosition);
         mIsLoadingMore = false;
     }
 
-    public void deleteByPosition(int position){
+    public void deleteByPosition(int position) {
         getAdapter().notifyItemRemoved(position);
         getAdapter().notifyItemRangeChanged(position, getAdapter().getItemCount() - position);
     }
 
-    public void insertItem(){
+    public void updateItem(int position) {
+        getAdapter().notifyItemChanged(position);
+    }
+
+    public void insertItem() {
 //        getAdapter().notifyItemInserted();
     }
 
