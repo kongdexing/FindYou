@@ -48,4 +48,14 @@ public class VolleyHttpResult {
     public void setData(Object data) {
         this.data = data;
     }
+
+    @Override
+    public String toString() {
+        return "VolleyHttpResult{" +
+                "status=" + status +
+                ", url='" + url + '\'' +
+                ", info='" + info + '\'' +
+                ", data=" + data +
+                '}';
+    }
 }

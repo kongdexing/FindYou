@@ -1,6 +1,9 @@
 package com.android.volley.common;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
+import android.util.StateSet;
 
 import java.util.HashMap;
 
@@ -10,18 +13,31 @@ import java.util.HashMap;
 
 public class CookieUtil {
 
-    private static HashMap<String, String> cookieMap = new HashMap<>();
+    private static Context mContext;
+    private static SharedPreferences sharedPreferences;
+    public static String COOKIE = "Cookie";
 
-    public static void setCookieMap(HashMap<String, String> cookie) {
-        cookieMap = cookie;
+    public static void initLocalCookie(Context context) {
+        if (context == null) {
+            return;
+        }
+        mContext = context;
+        Log.i("volley", "initLocalCookie: " + mContext.getPackageName());
+        sharedPreferences = mContext
+                .getSharedPreferences(mContext.getPackageName(), Context.MODE_PRIVATE);
     }
 
-    public static void putCookie(String key, String val) {
-        cookieMap.put(key, val);
+    public static void putCookie(String val) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(COOKIE, val);
+        editor.commit();
     }
 
-    public static HashMap<String, String> getCookieMap() {
-        return cookieMap;
+    public static String getCookie() {
+        if (sharedPreferences != null) {
+            return sharedPreferences.getString(COOKIE, "");
+        }
+        return "";
     }
 
 }

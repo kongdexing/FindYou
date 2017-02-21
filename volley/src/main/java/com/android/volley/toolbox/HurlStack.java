@@ -146,7 +146,7 @@ public class HurlStack implements HttpStack {
             if (header.getKey() != null) {
 //                Log.i("volley", "response header  " + header.getKey() + ":" + header.getValue().get(0));
                 if (header.getKey().equals("Set-Cookie")) {
-                    CookieUtil.putCookie("Cookie", header.getValue().get(0));
+                    CookieUtil.putCookie(header.getValue().get(0));
                 }
                 Header h = new BasicHeader(header.getKey(), header.getValue().get(0));
                 response.addHeader(h);

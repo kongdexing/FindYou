@@ -29,14 +29,26 @@ public class VolleyHttpService {
     private static VolleyHttpService mInstance = null;
     private static RequestQueue queue = null;
     private static Context mContext;
-    private static String serverURL;
+    private static String serverURL = "";
 
     private VolleyHttpService() {
     }
 
     public static void init(Context context, String url) {
+        if (context == null) {
+            return;
+        }
         mContext = context;
         serverURL = url;
+        CookieUtil.initLocalCookie(context);
+    }
+
+    public static void init(Context context) {
+        if (context == null) {
+            return;
+        }
+        mContext = context;
+        CookieUtil.initLocalCookie(context);
     }
 
     public static VolleyHttpService getInstance() {
@@ -54,12 +66,16 @@ public class VolleyHttpService {
         }
     }
 
+    public void sendGetRequest(final String urlAction, final VolleyRequestListener requestListener) {
+        sendRequest(urlAction, Request.Method.GET, null, null, requestListener);
+    }
+
     public void sendPostRequest(final String urlAction, final VolleyHttpParamsEntity antHttpParamsEntity, final VolleyRequestListener requestListener) {
-        postRequest(urlAction, antHttpParamsEntity, null, requestListener);
+        sendRequest(urlAction, Request.Method.POST, antHttpParamsEntity, null, requestListener);
     }
 
     public void sendPostRequest(final String urlAction, final VolleyHttpParamsEntity antHttpParamsEntity, DefaultRetryPolicy retryPolicy, final VolleyRequestListener requestListener) {
-        postRequest(urlAction, antHttpParamsEntity, retryPolicy, requestListener);
+        sendRequest(urlAction, Request.Method.POST, antHttpParamsEntity, retryPolicy, requestListener);
     }
 
     public void cancelAllRequest() {
@@ -73,7 +89,7 @@ public class VolleyHttpService {
             requestListener.onStart();
         }
 
-        MultipartRequest mr = new MultipartRequest(serverURL + urlAction, filePathList,httpParamsEntity.getMap(),
+        MultipartRequest mr = new MultipartRequest(serverURL + urlAction, filePathList, httpParamsEntity.getMap(),
                 new Response.Listener<String>() {
 
                     @Override
@@ -99,18 +115,15 @@ public class VolleyHttpService {
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Log.i(TAG, "upload file getHeaders: ");
                 Map<String, String> headers = new HashMap<String, String>();
-                HashMap<String, String> cookieMap = CookieUtil.getCookieMap();
-                for (String headerName : cookieMap.keySet()) {
-                    Log.i("volley", "header  " + headerName + ":" + cookieMap.get(headerName));
-                    headers.put(headerName, cookieMap.get(headerName));
-                }
+                Log.i("volley", "header  " + CookieUtil.getCookie());
+                headers.put(CookieUtil.COOKIE, CookieUtil.getCookie());
                 return headers;
             }
         };
         queue.add(mr);
     }
 
-    private void postRequest(final String urlAction, final VolleyHttpParamsEntity httpParamsEntity, DefaultRetryPolicy retryPolicy, final VolleyRequestListener requestListener) {
+    private void sendRequest(final String urlAction, final int Type, final VolleyHttpParamsEntity httpParamsEntity, DefaultRetryPolicy retryPolicy, final VolleyRequestListener requestListener) {
         if (requestListener != null) {
             requestListener.onStart();
         }
@@ -119,7 +132,7 @@ public class VolleyHttpService {
             Log.i(TAG, "postRequest: action " + serverURL + urlAction);
         }
 
-        final StringRequest stringRequest = new StringRequest(Request.Method.POST, serverURL + urlAction,
+        final StringRequest stringRequest = new StringRequest(Type, serverURL + urlAction,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -153,11 +166,8 @@ public class VolleyHttpService {
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Log.i(TAG, "getHeaders: ");
                 Map<String, String> headers = new HashMap<String, String>();
-                HashMap<String, String> cookieMap = CookieUtil.getCookieMap();
-                for (String headerName : cookieMap.keySet()) {
-                    Log.i("volley", "header  " + headerName + ":" + cookieMap.get(headerName));
-                    headers.put(headerName, cookieMap.get(headerName));
-                }
+                Log.i("volley", "header  " + CookieUtil.getCookie());
+                headers.put(CookieUtil.COOKIE, CookieUtil.getCookie());
                 return headers;
             }
         };
@@ -190,7 +200,7 @@ public class VolleyHttpService {
         } catch (Exception ex) {
             Log.e(TAG, "onResponse: parserJSON error " + ex.getMessage());
             result.setStatus(ResultCode.ParseJsonError);
-            result.setInfo(ex.getMessage());
+            result.setInfo(response);
         }
     }
 
