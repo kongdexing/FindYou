@@ -330,14 +330,14 @@ public class MaterialCalendarView extends ViewGroup {
                     R.styleable.MaterialCalendarView_mcv_leftArrowMask
             );
             if (leftMask == null) {
-                leftMask = getResources().getDrawable(R.drawable.mcv_action_previous);
+                leftMask = getResources().getDrawable(R.drawable.ms_previous);
             }
             setLeftArrowMask(leftMask);
             Drawable rightMask = a.getDrawable(
                     R.styleable.MaterialCalendarView_mcv_rightArrowMask
             );
             if (rightMask == null) {
-                rightMask = getResources().getDrawable(R.drawable.mcv_action_next);
+                rightMask = getResources().getDrawable(R.drawable.ms_next);
             }
             setRightArrowMask(rightMask);
 

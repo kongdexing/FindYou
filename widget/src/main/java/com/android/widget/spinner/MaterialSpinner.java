@@ -143,7 +143,6 @@ public class MaterialSpinner extends TextView {
 
         listView = new ListView(context);
         listView.setId(getId());
-        listView.setDivider(getResources().getDrawable(R.drawable.line_dotted));
         listView.setItemsCanFocus(true);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 

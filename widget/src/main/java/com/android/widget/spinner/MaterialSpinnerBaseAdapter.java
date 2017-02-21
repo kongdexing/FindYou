@@ -43,29 +43,35 @@ public abstract class MaterialSpinnerBaseAdapter<T> extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final TextView textView;
+        ViewHolder viewHolder = null;
         if (convertView == null) {
+            viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(context);
             convertView = inflater.inflate(R.layout.ms__list_item, parent, false);
-            textView = (TextView) convertView.findViewById(R.id.tv_tinted_spinner);
-            textView.setTextColor(textColor);
+            viewHolder.textView = (TextView) convertView.findViewById(R.id.tv_tinted_spinner);
+            viewHolder.view_line = convertView.findViewById(R.id.view_line);
+            viewHolder.textView.setTextColor(textColor);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 Configuration config = context.getResources().getConfiguration();
                 if (config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
-                    textView.setTextDirection(View.TEXT_DIRECTION_RTL);
+                    viewHolder.textView.setTextDirection(View.TEXT_DIRECTION_RTL);
                 }
             }
-            convertView.setTag(new ViewHolder(textView));
+            convertView.setTag(viewHolder);
         } else {
-            textView = ((ViewHolder) convertView.getTag()).textView;
+            viewHolder = ((ViewHolder) convertView.getTag());
         }
         Object item = getItem(position);
         if (item instanceof String) {
-            textView.setText(item.toString());
+            viewHolder.textView.setText(item.toString());
         } else if (item instanceof SpinnerModel) {
-            textView.setText(((SpinnerModel) item).getName());
+            viewHolder.textView.setText(((SpinnerModel) item).getName());
         }
-
+        if (position == 0) {
+            viewHolder.view_line.setVisibility(View.GONE);
+        } else {
+            viewHolder.view_line.setVisibility(View.VISIBLE);
+        }
         return convertView;
     }
 
@@ -105,10 +111,7 @@ public abstract class MaterialSpinnerBaseAdapter<T> extends BaseAdapter {
     private static class ViewHolder {
 
         private TextView textView;
-
-        private ViewHolder(TextView textView) {
-            this.textView = textView;
-        }
+        private View view_line;
 
     }
 
