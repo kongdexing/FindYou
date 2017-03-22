@@ -124,7 +124,7 @@ public class MaterialSpinner extends TextView {
 
         setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
         setClickable(true);
-        setPadding(paddingLeft, top, right, bottom);
+        setPadding(paddingLeft, 0, right, 0);
         setBackgroundResource(R.drawable.ms__selector);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && rtl) {
             setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
@@ -367,7 +367,8 @@ public class MaterialSpinner extends TextView {
      */
     public <T> void setItems(@NonNull List<T> items) {
         numberOfItems = items.size();
-        adapter = new MaterialSpinnerAdapter<>(getContext(), items).setTextColor(textColor).setTextSize(textSize);
+        adapter = new MaterialSpinnerAdapter<>(getContext(), items)
+                .setTextColor(textColor).setTextSize(textSize).setPaddingLeft(paddingLeft);
         setAdapterInternal(adapter);
     }
 

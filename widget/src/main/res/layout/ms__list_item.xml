@@ -35,10 +35,8 @@
         android:ellipsize="marquee"
         android:gravity="center_vertical"
         android:minHeight="@dimen/ms__item_height"
-        android:paddingBottom="@dimen/ms__popup_padding_top"
         android:paddingLeft="@dimen/ms__popup_padding_left"
         android:paddingStart="@dimen/ms__popup_padding_left"
-        android:paddingTop="@dimen/ms__popup_padding_top"
         android:text="" />
 </LinearLayout>
 

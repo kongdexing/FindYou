@@ -36,6 +36,7 @@ public abstract class MaterialSpinnerBaseAdapter<T> extends BaseAdapter {
     private int selectedIndex;
     private int textColor;
     private float textSize;
+    private int paddingLeft = 0;
 
     public MaterialSpinnerBaseAdapter(Context context) {
         this.context = context;
@@ -51,6 +52,8 @@ public abstract class MaterialSpinnerBaseAdapter<T> extends BaseAdapter {
             viewHolder.textView = (TextView) convertView.findViewById(R.id.tv_tinted_spinner);
             viewHolder.view_line = convertView.findViewById(R.id.view_line);
             viewHolder.textView.setTextColor(textColor);
+            viewHolder.textView.setPadding(paddingLeft, 0, paddingLeft, 0);
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 Configuration config = context.getResources().getConfiguration();
                 if (config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
@@ -105,6 +108,11 @@ public abstract class MaterialSpinnerBaseAdapter<T> extends BaseAdapter {
 
     public MaterialSpinnerBaseAdapter<T> setTextSize(float textSize) {
         this.textSize = textSize;
+        return this;
+    }
+
+    public MaterialSpinnerBaseAdapter<T> setPaddingLeft(int paddingLeft) {
+        this.paddingLeft = paddingLeft;
         return this;
     }
 
