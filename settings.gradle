@@ -1,1 +1,3 @@
-include ':app', ':volley', ':widget'
+include ':app', ':volley', ':widget', ':wechatpaytest'
+include ':uppaydemo'
+//include ':amm_sdk_sample'

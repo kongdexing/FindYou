@@ -4,7 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/FindYou.iml" filepath="$PROJECT_DIR$/FindYou.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/uppaydemo/uppaydemo.iml" filepath="$PROJECT_DIR$/uppaydemo/uppaydemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/volley/volley.iml" filepath="$PROJECT_DIR$/volley/volley.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wechatpaytest/wechatpaytest.iml" filepath="$PROJECT_DIR$/wechatpaytest/wechatpaytest.iml" />
       <module fileurl="file://$PROJECT_DIR$/widget/widget.iml" filepath="$PROJECT_DIR$/widget/widget.iml" />
     </modules>
   </component>

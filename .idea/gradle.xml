@@ -9,7 +9,9 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/uppaydemo" />
             <option value="$PROJECT_DIR$/volley" />
+            <option value="$PROJECT_DIR$/wechatpaytest" />
             <option value="$PROJECT_DIR$/widget" />
           </set>
         </option>
