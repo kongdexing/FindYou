@@ -31,6 +31,7 @@ public class CircularImageView extends ImageView {
     private int mBorderWidth = DEFAULT_BORDER_WIDTH;
     private static final int DEFAULT_BORDER_COLOR = Color.BLACK;
     private int mBorderColor = DEFAULT_BORDER_COLOR;
+    private int mBorderAlpha = 255;
     private final RectF mDrawableRect = new RectF();
     private final RectF mBorderRect = new RectF();
     private final Matrix mShaderMatrix = new Matrix();
@@ -63,6 +64,7 @@ public class CircularImageView extends ImageView {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CircleImageView, defStyle, 0);
         mBorderWidth = a.getDimensionPixelSize(R.styleable.CircleImageView_border_width, DEFAULT_BORDER_WIDTH);
         mBorderColor = a.getColor(R.styleable.CircleImageView_border_color, DEFAULT_BORDER_COLOR);
+        mBorderAlpha = a.getInt(R.styleable.CircleImageView_border_alpha, mBorderAlpha);
         a.recycle();
         init();
     }
@@ -226,6 +228,7 @@ public class CircularImageView extends ImageView {
         mBorderPaint.setAntiAlias(true);
         mBorderPaint.setColor(mBorderColor);
         mBorderPaint.setStrokeWidth(mBorderWidth);
+        mBorderPaint.setAlpha(mBorderAlpha);
 
         mBitmapHeight = mBitmap.getHeight();
         mBitmapWidth = mBitmap.getWidth();
