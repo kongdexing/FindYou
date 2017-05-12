@@ -1,8 +1,12 @@
 package com.android.widget.audiorecorder;
 
+import android.content.Context;
 import android.media.MediaRecorder;
+import android.telephony.TelephonyManager;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -109,9 +113,8 @@ public class AudioManager {
      * @time 2016/6/25 、
      */
     private String generateFileName() {
-        //随机生成不同的UUID
         String uuid = UUID.randomUUID().toString().replace("-", "");
-        return uuid.substring(0, 11) + ".amr";
+        return uuid + ".amr";
     }
 
     /**

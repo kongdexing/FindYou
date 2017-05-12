@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Vibrator;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -118,12 +119,12 @@ public class AudioRecorderButton extends Button {
         this(context, null);
     }
 
- /**
-      * @description 录音完成后的回调
-      * @author ldm
-      * @time  2016/6/25 11:18
-      * @param
-   */
+    /**
+     * @param
+     * @author ldm
+     * @description 录音完成后的回调
+     * @time 2016/6/25 11:18
+     */
     public interface AudioFinishRecorderCallBack {
         void onFinish(float seconds, String filePath);
     }
@@ -151,6 +152,13 @@ public class AudioRecorderButton extends Button {
 
         switch (action) {
             case MotionEvent.ACTION_DOWN://手指按下
+                try {
+                    Vibrator vibrator = (Vibrator) this.getContext().getSystemService(Context.VIBRATOR_SERVICE);
+                    long[] pattern = {100, 100}; // 停止 开启 停止 开启
+                    vibrator.vibrate(pattern, -1); //重复两次上面的pattern 如果只想震动一次，index设为-1
+                } catch (Exception ex) {
+
+                }
                 changeState(STATE_RECORDING);
                 break;
             case MotionEvent.ACTION_MOVE://手指移动
