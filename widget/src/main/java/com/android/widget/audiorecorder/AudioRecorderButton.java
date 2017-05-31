@@ -102,15 +102,25 @@ public class AudioRecorderButton extends Button {
             public void wellPrepared() {
                 mHandler.sendEmptyMessage(MSG_AUDIO_PREPARED);
             }
+
+            @Override
+            public void onRelease() {
+
+            }
         });
 
         // 由于这个类是button所以在构造方法中添加监听事件
         setOnLongClickListener(new OnLongClickListener() {
 
             public boolean onLongClick(View v) {
-                mReady = true;
-                mAudioManager.prepareAudio();
-                return false;
+                try {
+                    mReady = true;
+                    mAudioManager.prepareAudio();
+                    return false;
+                } catch (Exception ex) {
+
+                }
+                return true;
             }
         });
     }

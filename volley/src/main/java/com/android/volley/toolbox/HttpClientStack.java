@@ -50,6 +50,7 @@ import java.util.Map;
 public class HttpClientStack implements HttpStack {
     protected final HttpClient mClient;
 
+    private final int CONNECT_TIMEOUT = 10 * 1000;
     private final static String HEADER_CONTENT_TYPE = "Content-Type";
 
     public HttpClientStack(HttpClient client) {
@@ -82,7 +83,7 @@ public class HttpClientStack implements HttpStack {
         int timeoutMs = request.getTimeoutMs();
         // TODO: Reevaluate this connection timeout based on more wide-scale
         // data collection and possibly different for wifi vs. 3G.
-        HttpConnectionParams.setConnectionTimeout(httpParams, 5000);
+        HttpConnectionParams.setConnectionTimeout(httpParams, CONNECT_TIMEOUT);
         HttpConnectionParams.setSoTimeout(httpParams, timeoutMs);
         return mClient.execute(httpRequest);
     }
@@ -92,7 +93,7 @@ public class HttpClientStack implements HttpStack {
      */
     @SuppressWarnings("deprecation")
     /* protected */ static HttpUriRequest createHttpRequest(Request<?> request,
-            Map<String, String> additionalHeaders) throws AuthFailureError {
+                                                            Map<String, String> additionalHeaders) throws AuthFailureError {
         switch (request.getMethod()) {
             case Method.DEPRECATED_GET_OR_POST: {
                 // This is the deprecated way that needs to be handled for backwards compatibility.
@@ -144,7 +145,7 @@ public class HttpClientStack implements HttpStack {
     }
 
     private static void setEntityIfNonEmptyBody(HttpEntityEnclosingRequestBase httpRequest,
-            Request<?> request) throws AuthFailureError {
+                                                Request<?> request) throws AuthFailureError {
         byte[] body = request.getBody();
         if (body != null) {
             HttpEntity entity = new ByteArrayEntity(body);
@@ -154,7 +155,7 @@ public class HttpClientStack implements HttpStack {
 
     /**
      * Called before the request is executed using the underlying HttpClient.
-     *
+     * <p>
      * <p>Overwrite in subclasses to augment the request.</p>
      */
     protected void onPrepareRequest(HttpUriRequest request) throws IOException {

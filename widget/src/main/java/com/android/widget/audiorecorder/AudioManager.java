@@ -5,6 +5,7 @@ import android.media.MediaRecorder;
 import android.telephony.TelephonyManager;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
@@ -53,6 +54,8 @@ public class AudioManager {
      */
     public interface AudioStateListener {
         void wellPrepared();
+
+        void onRelease();
     }
 
     public AudioStateListener mAudioStateListener;
@@ -73,37 +76,34 @@ public class AudioManager {
      * @author ldm
      * @time 2016/6/25 11:15
      */
-    public void prepareAudio() {
-        try {
-            isPrepare = false;
-            File dir = new File(mDir);
-            if (!dir.exists()) {
-                dir.mkdirs();//文件不存在，则创建文件
-            }
-            String fileName = generateFileName();
-            File file = new File(dir, fileName);
-            mCurrentFilePath = file.getAbsolutePath();
-            mMediaRecorder = new MediaRecorder();
-            // 设置输出文件路径
-            mMediaRecorder.setOutputFile(file.getAbsolutePath());
-            // 设置MediaRecorder的音频源为麦克风
-            mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-            // 设置音频格式为RAW_AMR
-            mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.RAW_AMR);
-            // 设置音频编码为AMR_NB
-            mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-            // 准备录音
-            mMediaRecorder.prepare();
-            // 开始，必需在prepare()后调用
-            mMediaRecorder.start();
-            // 准备完成
-            isPrepare = true;
-            if (mAudioStateListener != null) {
-                mAudioStateListener.wellPrepared();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void prepareAudio() throws IOException {
+        isPrepare = false;
+        File dir = new File(mDir);
+        if (!dir.exists()) {
+            dir.mkdirs();//文件不存在，则创建文件
         }
+        String fileName = generateFileName();
+        File file = new File(dir, fileName);
+        mCurrentFilePath = file.getAbsolutePath();
+        mMediaRecorder = new MediaRecorder();
+        // 设置输出文件路径
+        mMediaRecorder.setOutputFile(file.getAbsolutePath());
+        // 设置MediaRecorder的音频源为麦克风
+        mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        // 设置音频格式为RAW_AMR
+        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.RAW_AMR);
+        // 设置音频编码为AMR_NB
+        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        // 准备录音
+        mMediaRecorder.prepare();
+        // 开始，必需在prepare()后调用
+        mMediaRecorder.start();
+        // 准备完成
+        isPrepare = true;
+        if (mAudioStateListener != null) {
+            mAudioStateListener.wellPrepared();
+        }
+
     }
 
     /**
@@ -145,6 +145,9 @@ public class AudioManager {
         mMediaRecorder.stop();
         mMediaRecorder.reset();
         mMediaRecorder = null;
+        if (mAudioStateListener != null) {
+            mAudioStateListener.onRelease();
+        }
     }
 
     /**
