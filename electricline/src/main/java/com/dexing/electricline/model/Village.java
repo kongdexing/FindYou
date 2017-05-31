@@ -10,6 +10,7 @@ import cn.bmob.v3.BmobObject;
 public class Village extends BmobObject {
 
     private String name;
+    private String village_id;
 
     public String getName() {
         return name;
@@ -17,5 +18,13 @@ public class Village extends BmobObject {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getVillage_id() {
+        return village_id;
+    }
+
+    public void setVillage_id(String village_id) {
+        this.village_id = village_id;
     }
 }

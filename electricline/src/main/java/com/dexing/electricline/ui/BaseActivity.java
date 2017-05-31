@@ -1,10 +1,13 @@
 package com.dexing.electricline.ui;
 
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import cn.bmob.v3.exception.BmobException;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
@@ -18,6 +21,7 @@ public class BaseActivity extends AppCompatActivity {
 
     public static String TAG = "";
     private CompositeSubscription mCompositeSubscription;
+    public Unbinder unbinder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +29,11 @@ public class BaseActivity extends AppCompatActivity {
         TAG = this.getClass().getSimpleName();
     }
 
+    @Override
+    public void setContentView(@LayoutRes int layoutResID) {
+        super.setContentView(layoutResID);
+        unbinder = ButterKnife.bind(this);
+    }
 
     /**
      * 解决Subscription内存泄露问题
@@ -63,6 +72,9 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (unbinder != null) {
+            unbinder.unbind();
+        }
         if (this.mCompositeSubscription != null) {
             this.mCompositeSubscription.unsubscribe();
         }

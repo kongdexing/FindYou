@@ -28,8 +28,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_margin="30dp"
+        android:layout_margin="20dp"
         android:clickable="true"
-        android:src="@android:drawable/ic_menu_add"
-        app:fabSize="mini" />
+        android:src="@android:drawable/ic_input_add"
+        app:borderWidth="3dp"
+        app:elevation="8dp"
+        app:pressedTranslationZ="16dp"
+        app:rippleColor="#33728dff" />
 </RelativeLayout>
