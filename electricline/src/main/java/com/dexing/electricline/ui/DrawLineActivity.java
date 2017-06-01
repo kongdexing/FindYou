@@ -1,5 +1,6 @@
 package com.dexing.electricline.ui;
 
+import android.content.Intent;
 import android.graphics.Point;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -38,7 +39,8 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 
-public class DrawLineActivity extends BaseActivity implements AMap.OnMarkerClickListener {
+public class DrawLineActivity extends BaseActivity implements AMap.OnMarkerClickListener,
+        AMap.OnInfoWindowClickListener {
 
     private String TAG = DrawLineActivity.class.getSimpleName();
     private AMap aMap;
@@ -86,6 +88,7 @@ public class DrawLineActivity extends BaseActivity implements AMap.OnMarkerClick
             aMap = mapView.getMap();
         }
         aMap.setOnMarkerClickListener(this);// 设置点击marker事件监听器
+        aMap.setOnInfoWindowClickListener(this);
 
         setTitle(currentVillage.getName());
 
@@ -103,16 +106,20 @@ public class DrawLineActivity extends BaseActivity implements AMap.OnMarkerClick
                     LatLng latLng = point.getLatLng();
                     bounds.include(latLng);
                     MarkerView markerView = new MarkerView(DrawLineActivity.this);
+                    MarkerOptions markerOption = new MarkerOptions().position(latLng);
                     if (point.getType() == 1) {
                         markerView.isPolePoint(true);
+                        markerOption.title("电线杆：" + point.getNumber());
                     } else {
                         markerView.isPolePoint(false);
+                        markerOption.title("电表箱：" + point.getNumber());
                     }
                     markerView.setPointNum(point.getNumber());
-                    marker = aMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromView(markerView)));
+                    markerOption.icon(BitmapDescriptorFactory.fromView(markerView));
+                    marker = aMap.addMarker(markerOption);
                     marker.setObject(point);
                 }
-                aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 43));
+                aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 20));
             }
         });
 
@@ -121,10 +128,17 @@ public class DrawLineActivity extends BaseActivity implements AMap.OnMarkerClick
     @Override
     public boolean onMarkerClick(Marker marker) {
         EPoint point = (EPoint) marker.getObject();
-        Toast.makeText(this, point.getNumber(), Toast.LENGTH_SHORT).show();
-
 
         return false;
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        EPoint point = (EPoint) marker.getObject();
+        //查看电表箱用户信息
+        Intent intent = new Intent(this, BoxUserActivity.class);
+        intent.putExtra("point", point);
+        startActivity(intent);
     }
 
     @OnClick({R.id.floatingActionButton, R.id.btnCancel, R.id.btnOK, R.id.txt_box, R.id.txt_pole, R.id.btnHelp})

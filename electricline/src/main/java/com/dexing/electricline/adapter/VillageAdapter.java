@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,7 +33,6 @@ public class VillageAdapter extends RecyclerView.Adapter {
     private Context mContext;
 
     public VillageAdapter(Context context) {
-        this.listVillage = listVillage;
         this.mContext = context;
     }
 
@@ -61,10 +61,9 @@ public class VillageAdapter extends RecyclerView.Adapter {
         }
         final MyViewHolder viewHolder = (MyViewHolder) holder;
         viewHolder.txtName.setText(village.getName());
-        viewHolder.txtName.setOnClickListener(new View.OnClickListener() {
+        viewHolder.llContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, village.getName() + "" + village.getObjectId(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(mContext, DrawLineActivity.class);
                 intent.putExtra("village", village);
                 mContext.startActivity(intent);
@@ -79,6 +78,8 @@ public class VillageAdapter extends RecyclerView.Adapter {
 
     class MyViewHolder extends RecyclerView.ViewHolder {
 
+        @BindView(R.id.llContent)
+        LinearLayout llContent;
         @BindView(R.id.txtName)
         TextView txtName;
 
