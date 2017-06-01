@@ -78,7 +78,7 @@
             android:layout_marginTop="@dimen/dp_5"
             android:background="@drawable/btn_bg_normal"
             android:gravity="center"
-            android:text="删除"
+            android:text="确定"
             android:textSize="@dimen/sp_14" />
     </RelativeLayout>
 </RelativeLayout>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">DL</string>
+    <string name="app_name">电表助手</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">用户名</string>

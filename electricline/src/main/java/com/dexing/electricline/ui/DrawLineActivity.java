@@ -30,8 +30,10 @@ import com.amap.api.maps2d.model.Marker;
 import com.amap.api.maps2d.model.MarkerOptions;
 import com.dexing.electricline.R;
 import com.dexing.electricline.model.EPoint;
+import com.dexing.electricline.model.Help;
 import com.dexing.electricline.model.Village;
 import com.dexing.electricline.view.BottomPointView;
+import com.dexing.electricline.view.CustomDialog;
 import com.dexing.electricline.view.CustomEditDialog;
 import com.dexing.electricline.view.MarkerPoleNumView;
 import com.dexing.electricline.view.MarkerView;
@@ -184,7 +186,18 @@ public class DrawLineActivity extends BaseActivity implements AMap.OnMapClickLis
                 txt_pole.setTextColor(getResources().getColor(R.color.colorPrimary));
                 break;
             case R.id.btnHelp:
-
+                BmobQuery<Help> bmobQuery = new BmobQuery<Help>();
+                bmobQuery.findObjects(new FindListener<Help>() {
+                    @Override
+                    public void done(List<Help> list, BmobException e) {
+                        if (list.size() > 0) {
+                            String content = list.get(0).getContent();
+                            CustomDialog dialog = new CustomDialog(DrawLineActivity.this);
+                            dialog.setTitle("帮助");
+                            dialog.setMessage(content);
+                        }
+                    }
+                });
                 break;
             case R.id.btnOK:
                 if (point_type == 0) {
@@ -237,6 +250,7 @@ public class DrawLineActivity extends BaseActivity implements AMap.OnMapClickLis
         albumSourceView.setOnBottomChatClickListener(new BottomPointView.OnBottomChatClickListener() {
             @Override
             public void onLookClick() {
+                picPopup.dismiss();
                 if (point.getType() == 2) {
                     //查看电表箱用户信息
                     Intent intent = new Intent(DrawLineActivity.this, BoxUserActivity.class);
@@ -249,6 +263,7 @@ public class DrawLineActivity extends BaseActivity implements AMap.OnMapClickLis
 
             @Override
             public void onDeleteClick() {
+                picPopup.dismiss();
                 point.delete(new UpdateListener() {
                     @Override
                     public void done(BmobException e) {
@@ -305,6 +320,7 @@ public class DrawLineActivity extends BaseActivity implements AMap.OnMapClickLis
                     markerView.setPointNum(point.getNumber());
                     markerOption.icon(BitmapDescriptorFactory.fromView(markerView));
                     marker = aMap.addMarker(markerOption);
+                    marker.setObject(point);
                     toast("添加数据成功，返回objectId为：" + objectId);
                 } else {
                     toast("创建数据失败：" + e.getMessage());
