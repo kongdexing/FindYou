@@ -64,7 +64,7 @@ public class VillageAdapter extends RecyclerView.Adapter {
         viewHolder.txtName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, village.getName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, village.getName() + "" + village.getObjectId(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(mContext, DrawLineActivity.class);
                 intent.putExtra("village", village);
                 mContext.startActivity(intent);

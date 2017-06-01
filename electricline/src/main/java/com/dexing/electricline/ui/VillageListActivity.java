@@ -108,7 +108,7 @@ public class VillageListActivity extends BaseActivity {
             @Override
             public void done(String objectId, BmobException e) {
                 if (e == null) {
-                    village.setVillage_id(objectId);
+                    village.setObjectId(objectId);
                     toast("添加数据成功，返回objectId为：" + objectId);
                     adapter.addData(village);
                 } else {

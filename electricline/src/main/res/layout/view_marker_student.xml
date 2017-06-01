@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fl_Content"
+    android:layout_width="@dimen/dp_40"
+    android:layout_height="@dimen/dp_50"
+    android:background="@drawable/icon_marker_box_bg">
+
+    <com.dexing.electricline.view.CircularImageView
+        android:id="@+id/imgHead"
+        android:layout_width="@dimen/dp_25"
+        android:layout_height="@dimen/dp_25"
+        android:layout_gravity="center|top"
+        android:layout_marginTop="@dimen/dp_6"
+        android:src="@drawable/icon_box" />
+
+    <TextView
+        android:id="@+id/txtNum"
+        android:layout_width="@dimen/dp_12"
+        android:layout_height="@dimen/dp_12"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_circle_dot"
+        android:text="3"
+        android:gravity="center"
+        android:textColor="@color/colorWhite"
+        android:textSize="8sp" />
+
+</FrameLayout>

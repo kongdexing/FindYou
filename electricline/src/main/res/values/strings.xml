@@ -11,4 +11,6 @@
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">请输入用户名</string>
     <string name="permission_rationale"></string>
+
+    <string name="toast_choose_point">先选择添加【电线杆】还是【电表箱】</string>
 </resources>

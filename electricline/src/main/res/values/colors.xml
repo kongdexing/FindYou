@@ -10,5 +10,5 @@
     <color name="color_black_3">#999999</color>
     <color name="line_bg">#CDCDCD</color>
     <color name="colorWhite">#FFFFFF</color>
-
+    <color name="item_clicked">#ffd3dde6</color>
 </resources>

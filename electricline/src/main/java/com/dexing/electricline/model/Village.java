@@ -1,5 +1,7 @@
 package com.dexing.electricline.model;
 
+import java.io.Serializable;
+
 import cn.bmob.v3.BmobObject;
 
 /**
@@ -7,10 +9,9 @@ import cn.bmob.v3.BmobObject;
  * No1
  */
 
-public class Village extends BmobObject {
+public class Village extends BmobObject implements Serializable {
 
     private String name;
-    private String village_id;
 
     public String getName() {
         return name;
@@ -20,11 +21,4 @@ public class Village extends BmobObject {
         this.name = name;
     }
 
-    public String getVillage_id() {
-        return village_id;
-    }
-
-    public void setVillage_id(String village_id) {
-        this.village_id = village_id;
-    }
 }

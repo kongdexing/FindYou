@@ -1,35 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.amap.api.maps2d.MapView
-        android:id="@+id/map"
+    <RelativeLayout
+        android:id="@+id/rlTop"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:visibility="gone">
 
-    <LinearLayout
+        <TextView
+            android:id="@+id/txt_pole"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="10dp"
+            android:background="@drawable/bg_recharge_money"
+            android:padding="5dp"
+            android:text="杆"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/txt_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="10dp"
+            android:layout_toRightOf="@+id/txt_pole"
+            android:background="@drawable/bg_recharge_money"
+            android:padding="5dp"
+            android:text="箱"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/btnHelp"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/btnCancel"
+            android:text="帮助" />
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/btnOK"
+            android:text="取消" />
+
+        <Button
+            android:id="@+id/btnOK"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_margin="5dp"
+            android:text="添加" />
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rlTop">
 
+        <com.amap.api.maps2d.MapView
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/img_center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/search_center_ic"
+            android:visibility="gone" />
+    </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/img_center"
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:src="@drawable/search_center_ic" />
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone" />
 
-    <Button
-        android:id="@+id/btnOK"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:layout_margin="5dp"
-        android:text="添加" />
-
-</FrameLayout>
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="70dp"
+        android:layout_marginRight="20dp"
+        android:clickable="true"
+        android:src="@android:drawable/ic_input_add"
+        app:borderWidth="3dp"
+        app:elevation="8dp"
+        app:pressedTranslationZ="16dp"
+        app:rippleColor="#33728dff" />
+</RelativeLayout>
