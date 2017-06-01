@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -30,6 +31,9 @@ public class UserEditActivity extends BaseActivity {
 
     @BindView(R.id.edtMark)
     EditText edtMark;
+
+    @BindView(R.id.btnDel)
+    Button btnDel;
 
     private EPoint currentPoint;
     private BoxUser currentUser;
@@ -59,11 +63,14 @@ public class UserEditActivity extends BaseActivity {
             edtName.setText(currentUser.getUserName());
             edtPhone.setText(currentUser.getUserPhone());
             edtMark.setText(currentUser.getMark());
+            btnDel.setVisibility(View.VISIBLE);
+        } else {
+            btnDel.setVisibility(View.GONE);
         }
 
     }
 
-    @OnClick(R.id.btnOK)
+    @OnClick({R.id.btnOK, R.id.btnDel})
     void viewOnClick(View view) {
         switch (view.getId()) {
             case R.id.btnOK:
@@ -111,6 +118,22 @@ public class UserEditActivity extends BaseActivity {
                         }
                     });
                 }
+                break;
+            case R.id.btnDel:
+                if (currentUser == null) {
+                    return;
+                }
+                currentUser.delete(currentUser.getObjectId(), new UpdateListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (e == null) {
+                            Toast.makeText(UserEditActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+                            finish();
+                        } else {
+                            Toast.makeText(UserEditActivity.this, "删除失败", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
                 break;
         }
     }

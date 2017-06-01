@@ -15,12 +15,16 @@ import android.widget.Toast;
 import com.dexing.electricline.R;
 import com.dexing.electricline.model.Village;
 import com.dexing.electricline.ui.DrawLineActivity;
+import com.dexing.electricline.ui.VillageEditActivity;
+import com.dexing.electricline.view.CustomDialog;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * Created by dexing on 2017/5/31.
@@ -64,11 +68,12 @@ public class VillageAdapter extends RecyclerView.Adapter {
         viewHolder.llContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, DrawLineActivity.class);
+                Intent intent = new Intent(mContext, VillageEditActivity.class);
                 intent.putExtra("village", village);
                 mContext.startActivity(intent);
             }
         });
+
     }
 
     @Override

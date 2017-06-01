@@ -41,7 +41,7 @@ public class VillageListActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_village_list);
-        setTitle("");
+        setTitle("村列表");
 
         initRecyclerView(recycleView, refresh_layout);
         initData();

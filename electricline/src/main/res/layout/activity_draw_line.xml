@@ -17,9 +17,8 @@
             android:layout_centerVertical="true"
             android:layout_margin="10dp"
             android:background="@drawable/bg_recharge_money"
-            android:padding="5dp"
-            android:text="电线杆"
-            android:textSize="18sp" />
+            android:padding="3dp"
+            android:text="电线杆" />
 
         <TextView
             android:id="@+id/txt_box"
@@ -29,9 +28,8 @@
             android:layout_margin="10dp"
             android:layout_toRightOf="@+id/txt_pole"
             android:background="@drawable/bg_recharge_money"
-            android:padding="5dp"
-            android:text="电表箱"
-            android:textSize="18sp" />
+            android:padding="3dp"
+            android:text="电表箱" />
 
         <Button
             android:id="@+id/btnHelp"
@@ -83,8 +81,8 @@
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:layout_marginBottom="8dp"
         android:visibility="gone" />
 

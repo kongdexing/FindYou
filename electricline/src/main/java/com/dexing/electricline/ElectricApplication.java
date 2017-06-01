@@ -5,6 +5,8 @@ import android.content.Context;
 import android.view.Display;
 import android.view.WindowManager;
 
+import com.tencent.bugly.Bugly;
+
 import cn.bmob.v3.Bmob;
 
 /**
@@ -47,6 +49,8 @@ public class ElectricApplication extends Application {
         //.setFileExpiration(2500)
         //.build();
         //Bmob.initialize(config);
+
+        Bugly.init(getApplicationContext(), "ffa78dfd97", false);
     }
 
     public static ElectricApplication getInstance() {

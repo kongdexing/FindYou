@@ -13,4 +13,7 @@
     <string name="permission_rationale"></string>
 
     <string name="toast_choose_point">先选择添加【电线杆】还是【电表箱】</string>
+    <string name="toast_pole_noinfo">无电线杆信息</string>
+    <string name="msg_delete_village">确定要删除该村信息吗？</string>
+
 </resources>

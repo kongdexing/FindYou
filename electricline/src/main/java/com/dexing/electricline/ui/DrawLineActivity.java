@@ -2,13 +2,18 @@ package com.dexing.electricline.ui;
 
 import android.content.Intent;
 import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -26,6 +31,7 @@ import com.amap.api.maps2d.model.MarkerOptions;
 import com.dexing.electricline.R;
 import com.dexing.electricline.model.EPoint;
 import com.dexing.electricline.model.Village;
+import com.dexing.electricline.view.BottomPointView;
 import com.dexing.electricline.view.CustomEditDialog;
 import com.dexing.electricline.view.MarkerPoleNumView;
 import com.dexing.electricline.view.MarkerView;
@@ -38,8 +44,9 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 
-public class DrawLineActivity extends BaseActivity implements AMap.OnMarkerClickListener,
+public class DrawLineActivity extends BaseActivity implements AMap.OnMapClickListener, AMap.OnMarkerClickListener,
         AMap.OnInfoWindowClickListener {
 
     private String TAG = DrawLineActivity.class.getSimpleName();
@@ -87,6 +94,7 @@ public class DrawLineActivity extends BaseActivity implements AMap.OnMarkerClick
         if (aMap == null) {
             aMap = mapView.getMap();
         }
+        aMap.setOnMapClickListener(this);
         aMap.setOnMarkerClickListener(this);// 设置点击marker事件监听器
         aMap.setOnInfoWindowClickListener(this);
 
@@ -126,19 +134,25 @@ public class DrawLineActivity extends BaseActivity implements AMap.OnMarkerClick
     }
 
     @Override
-    public boolean onMarkerClick(Marker marker) {
-        EPoint point = (EPoint) marker.getObject();
+    public void onMapClick(LatLng latLng) {
+        Log.i(TAG, "onMapClick: ");
+        if (marker != null) {
+            marker.hideInfoWindow();
+        }
+    }
 
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        this.marker = marker;
+        EPoint point = (EPoint) marker.getObject();
         return false;
     }
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        EPoint point = (EPoint) marker.getObject();
-        //查看电表箱用户信息
-        Intent intent = new Intent(this, BoxUserActivity.class);
-        intent.putExtra("point", point);
-        startActivity(intent);
+        //弹出popup，删除、查看
+        marker.hideInfoWindow();
+        showBottomView(mapView, marker);
     }
 
     @OnClick({R.id.floatingActionButton, R.id.btnCancel, R.id.btnOK, R.id.txt_box, R.id.txt_pole, R.id.btnHelp})
@@ -214,21 +228,84 @@ public class DrawLineActivity extends BaseActivity implements AMap.OnMarkerClick
         return mLatlng;
     }
 
-    private void addPoint(final EPoint point) {
+    public void showBottomView(View view, final Marker marker) {
+        BottomPointView albumSourceView = new BottomPointView(this);
+        final EPoint point = (EPoint) marker.getObject();
+        final PopupWindow picPopup = new PopupWindow(albumSourceView,
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
 
+        albumSourceView.setOnBottomChatClickListener(new BottomPointView.OnBottomChatClickListener() {
+            @Override
+            public void onLookClick() {
+                if (point.getType() == 2) {
+                    //查看电表箱用户信息
+                    Intent intent = new Intent(DrawLineActivity.this, BoxUserActivity.class);
+                    intent.putExtra("point", point);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(DrawLineActivity.this, R.string.toast_pole_noinfo, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onDeleteClick() {
+                point.delete(new UpdateListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (e == null) {
+                            Toast.makeText(DrawLineActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+                            //移除marker
+                            marker.remove();
+                        } else {
+                            Toast.makeText(DrawLineActivity.this, "删除失败", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onBack() {
+                picPopup.dismiss();
+            }
+        });
+
+        picPopup.setTouchable(true);
+        picPopup.setBackgroundDrawable(new ColorDrawable());
+        picPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                backgroundAlpha(1.0f);
+            }
+        });
+        backgroundAlpha(0.5f);
+        picPopup.showAtLocation(view, Gravity.BOTTOM, 0, 0);
+    }
+
+    private void backgroundAlpha(float bgAlpha) {
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.alpha = bgAlpha; //0.0-1.0
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        getWindow().setAttributes(lp);
+    }
+
+    private void addPoint(final EPoint point) {
         point.save(new SaveListener<String>() {
             @Override
             public void done(String objectId, BmobException e) {
                 if (e == null) {
                     MarkerView markerView = new MarkerView(DrawLineActivity.this);
-                    markerView.isPolePoint(point.getType() == 1);
+                    MarkerOptions markerOption = new MarkerOptions().position(point.getLatLng());
+                    if (point.getType() == 1) {
+                        markerView.isPolePoint(true);
+                        markerOption.title("电线杆：" + point.getNumber());
+                    } else {
+                        markerView.isPolePoint(false);
+                        markerOption.title("电表箱：" + point.getNumber());
+                    }
                     markerView.setPointNum(point.getNumber());
-
-                    marker = aMap.addMarker(new MarkerOptions().position(point.getLatLng()).icon(BitmapDescriptorFactory.fromView(markerView)));
-
-//                    village.setObjectId(objectId);
+                    markerOption.icon(BitmapDescriptorFactory.fromView(markerView));
+                    marker = aMap.addMarker(markerOption);
                     toast("添加数据成功，返回objectId为：" + objectId);
-//                    adapter.addData(village);
                 } else {
                     toast("创建数据失败：" + e.getMessage());
                 }

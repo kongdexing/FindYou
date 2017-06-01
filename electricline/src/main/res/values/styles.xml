@@ -17,7 +17,7 @@
 
     <style name="userText">
         <item name="android:textColor">@color/color_black_1</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:layout_margin">5dp</item>
         <item name="android:layout_gravity">center</item>
     </style>
