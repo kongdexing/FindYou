@@ -11,6 +11,6 @@
         android:padding="@dimen/dp_5"
         android:text="long"
         android:textColor="@color/color_black_1"
-        android:textSize="@dimen/sp_18" />
+        android:textSize="@dimen/sp_24" />
 
 </LinearLayout>

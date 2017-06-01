@@ -1,6 +1,7 @@
 package com.dexing.electricline.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import com.dexing.electricline.R;
 import com.dexing.electricline.model.Village;
+import com.dexing.electricline.ui.DrawLineActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +65,9 @@ public class VillageAdapter extends RecyclerView.Adapter {
             @Override
             public void onClick(View v) {
                 Toast.makeText(mContext, village.getName(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mContext, DrawLineActivity.class);
+                intent.putExtra("village", village);
+                mContext.startActivity(intent);
             }
         });
     }
