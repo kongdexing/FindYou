@@ -8,6 +8,12 @@
         <item>@color/green</item>
     </integer-array>
 
+    <string-array name="points">
+        <item>电线杆12</item>
+        <item>电线杆15 </item>
+        <item>电表箱</item>
+    </string-array>
+
     <color name="red">#FFC93437</color>
     <color name="blue">#FF375BF1</color>
     <color name="yellow">#FFF7D23E</color>

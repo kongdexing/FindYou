@@ -11,16 +11,16 @@ import android.widget.TextView;
 import com.dexing.electricline.ElectricApplication;
 import com.dexing.electricline.R;
 
-public class CustomEditDialog implements View.OnClickListener {
+public class CustomBoxDialog implements View.OnClickListener {
 
     private Context mContext;
     private TextView txtTitle;
-    private EditText edtMessage;
+    private EditText edtMessage, edtMsg2;
     private Button btnConfirm, btnCancel;
     private DialogClickListener clickListener;
     private AlertDialog alertDialog;
 
-    public CustomEditDialog(Context context) {
+    public CustomBoxDialog(Context context) {
         mContext = context;
         alertDialog = new AlertDialog.Builder(context).create();
         alertDialog.setView(new EditText(context));
@@ -31,10 +31,11 @@ public class CustomEditDialog implements View.OnClickListener {
         alertDialog.setCanceledOnTouchOutside(false);
 
         Window window = alertDialog.getWindow();
-        window.setContentView(R.layout.popup_edit_dialog);
+        window.setContentView(R.layout.popup_edit_box_dialog);
 
         txtTitle = (TextView) window.findViewById(R.id.title);
         edtMessage = (EditText) window.findViewById(R.id.content);
+        edtMsg2 = (EditText) window.findViewById(R.id.content2);
 
 //        edtMessage.requestFocus();
         btnConfirm = (Button) window.findViewById(R.id.ok);
@@ -82,7 +83,7 @@ public class CustomEditDialog implements View.OnClickListener {
         switch (view.getId()) {
             case R.id.ok:
                 if (clickListener != null) {
-                    clickListener.onPositiveClick(edtMessage.getText().toString());
+                    clickListener.onPositiveClick(edtMessage.getText().toString(), edtMsg2.getText().toString());
                 }
                 break;
             case R.id.cancel:
@@ -92,7 +93,7 @@ public class CustomEditDialog implements View.OnClickListener {
     }
 
     public interface DialogClickListener {
-        void onPositiveClick(String value);
+        void onPositiveClick(String value, String value2);
     }
 
 }

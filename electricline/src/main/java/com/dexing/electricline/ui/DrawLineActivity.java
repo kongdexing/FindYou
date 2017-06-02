@@ -10,12 +10,14 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +35,7 @@ import com.dexing.electricline.model.EPoint;
 import com.dexing.electricline.model.Help;
 import com.dexing.electricline.model.Village;
 import com.dexing.electricline.view.BottomPointView;
+import com.dexing.electricline.view.CustomBoxDialog;
 import com.dexing.electricline.view.CustomDialog;
 import com.dexing.electricline.view.CustomEditDialog;
 import com.dexing.electricline.view.MarkerPoleNumView;
@@ -48,7 +51,7 @@ import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 
-public class DrawLineActivity extends BaseActivity implements AMap.OnMapClickListener, AMap.OnMarkerClickListener,
+public class DrawLineActivity extends BaseLineActivity implements AMap.OnMapClickListener, AMap.OnMarkerClickListener,
         AMap.OnInfoWindowClickListener {
 
     private String TAG = DrawLineActivity.class.getSimpleName();
@@ -62,16 +65,16 @@ public class DrawLineActivity extends BaseActivity implements AMap.OnMapClickLis
 
     @BindView(R.id.progress)
     ProgressBar progress;
-    @BindView(R.id.txt_pole)
-    TextView txt_pole;
-    @BindView(R.id.txt_box)
-    TextView txt_box;
     @BindView(R.id.rlTop)
     RelativeLayout rlTop;
     @BindView(R.id.floatingActionButton)
     FloatingActionButton floatingActionButton;
 
-    private int point_type = 0;
+    @BindView(R.id.spinnerPoint)
+    Spinner spinnerPoint;
+
+    private int point_type = TYPE_POLE_12;
+
     private Village currentVillage;
 
     @Override
@@ -93,6 +96,20 @@ public class DrawLineActivity extends BaseActivity implements AMap.OnMapClickLis
     }
 
     private void init() {
+
+        spinnerPoint.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position == TYPE_POLE_12) {
+
+                } else {
+
+                }
+
+                point_type = position;
+            }
+        });
+
         if (aMap == null) {
             aMap = mapView.getMap();
         }
@@ -157,33 +174,19 @@ public class DrawLineActivity extends BaseActivity implements AMap.OnMapClickLis
         showBottomView(mapView, marker);
     }
 
-    @OnClick({R.id.floatingActionButton, R.id.btnCancel, R.id.btnOK, R.id.txt_box, R.id.txt_pole, R.id.btnHelp})
+    @OnClick({R.id.floatingActionButton, R.id.btnCancel, R.id.btnOK, R.id.btnHelp})
     void viewOnClick(View view) {
         switch (view.getId()) {
             case R.id.floatingActionButton:
                 floatingActionButton.setVisibility(View.GONE);
                 rlTop.setVisibility(View.VISIBLE);
                 img_center.setVisibility(View.VISIBLE);
-                viewOnClick(txt_box);
+                point_type = spinnerPoint.getSelectedItemPosition();
                 break;
             case R.id.btnCancel:
                 floatingActionButton.setVisibility(View.VISIBLE);
                 rlTop.setVisibility(View.GONE);
                 img_center.setVisibility(View.GONE);
-                break;
-            case R.id.txt_pole:
-                point_type = 1;
-                txt_pole.setBackground(getResources().getDrawable(R.color.colorPrimary));
-                txt_pole.setTextColor(getResources().getColor(R.color.colorWhite));
-                txt_box.setBackground(getResources().getDrawable(R.drawable.bg_recharge_money));
-                txt_box.setTextColor(getResources().getColor(R.color.colorPrimary));
-                break;
-            case R.id.txt_box:
-                point_type = 2;
-                txt_box.setBackground(getResources().getDrawable(R.color.colorPrimary));
-                txt_box.setTextColor(getResources().getColor(R.color.colorWhite));
-                txt_pole.setBackground(getResources().getDrawable(R.drawable.bg_recharge_money));
-                txt_pole.setTextColor(getResources().getColor(R.color.colorPrimary));
                 break;
             case R.id.btnHelp:
                 BmobQuery<Help> bmobQuery = new BmobQuery<Help>();
@@ -200,10 +203,10 @@ public class DrawLineActivity extends BaseActivity implements AMap.OnMapClickLis
                 });
                 break;
             case R.id.btnOK:
-                if (point_type == 0) {
-                    Toast.makeText(this, R.string.toast_choose_point, Toast.LENGTH_SHORT).show();
-                    return;
-                }
+//                if (point_type == 0) {
+//                    Toast.makeText(this, R.string.toast_choose_point, Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
                 int x = img_center.getLeft() + img_center.getWidth() / 2;
                 int y = img_center.getBottom();
                 LatLng mLatlng = toGeoLocation(x, y);
@@ -216,21 +219,37 @@ public class DrawLineActivity extends BaseActivity implements AMap.OnMapClickLis
                 point.setType(point_type);
                 point.setVillageId(currentVillage.getObjectId());
 
-                //输入编号
-                CustomEditDialog dialog = new CustomEditDialog(DrawLineActivity.this);
-                dialog.setTitle("编号");
-                dialog.setHintEdit("请输入编号");
-                dialog.setAlertDialogClickListener(new CustomEditDialog.DialogClickListener() {
-                    @Override
-                    public void onPositiveClick(String value) {
-                        if (value.isEmpty()) {
-                            Toast.makeText(DrawLineActivity.this, "编号不可为空", Toast.LENGTH_SHORT).show();
-                            return;
+                //电线杆需要录入编号，电表箱需要输入电能表资产号
+                if (point_type == 2) {
+                    CustomBoxDialog dialog = new CustomBoxDialog(DrawLineActivity.this);
+                    dialog.setAlertDialogClickListener(new CustomBoxDialog.DialogClickListener() {
+                        @Override
+                        public void onPositiveClick(String value, String value2) {
+                            if (value.isEmpty() || value2.isEmpty()) {
+                                Toast.makeText(DrawLineActivity.this, "编号或资产号不可为空", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            point.setNumber(value);
+//                        addPoint(point);
                         }
-                        point.setNumber(value);
-                        addPoint(point);
-                    }
-                });
+                    });
+                } else {
+                    //输入编号
+                    CustomEditDialog dialog = new CustomEditDialog(DrawLineActivity.this);
+                    dialog.setTitle("编号");
+                    dialog.setHintEdit("请输入编号");
+                    dialog.setAlertDialogClickListener(new CustomEditDialog.DialogClickListener() {
+                        @Override
+                        public void onPositiveClick(String value) {
+                            if (value.isEmpty()) {
+                                Toast.makeText(DrawLineActivity.this, "编号不可为空", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            point.setNumber(value);
+//                        addPoint(point);
+                        }
+                    });
+                }
                 break;
         }
     }

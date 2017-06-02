@@ -17,6 +17,7 @@ public class EPoint extends BmobObject {
     private int type;//1杆，2电表箱
     private String number;//编号
 
+
     public double getLatitude() {
         return latitude;
     }
