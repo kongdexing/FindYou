@@ -14,9 +14,9 @@ public class EPoint extends BmobObject {
     private double latitude;
     private double longitude;
     private String villageId;
-    private int type;//1杆，2电表箱
+    private int type;//0 12米，1 15米杆，2电表箱
     private String number;//编号
-
+    private String propertyNum; //资产号
 
     public double getLatitude() {
         return latitude;
@@ -56,6 +56,14 @@ public class EPoint extends BmobObject {
 
     public void setNumber(String number) {
         this.number = number;
+    }
+
+    public String getPropertyNum() {
+        return propertyNum;
+    }
+
+    public void setPropertyNum(String propertyNum) {
+        this.propertyNum = propertyNum;
     }
 
     public LatLng getLatLng() {

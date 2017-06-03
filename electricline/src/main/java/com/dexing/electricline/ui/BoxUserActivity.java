@@ -1,23 +1,21 @@
 package com.dexing.electricline.ui;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.dexing.electricline.R;
 import com.dexing.electricline.adapter.BoxUserAdapter;
 import com.dexing.electricline.adapter.DividerItemDecoration;
-import com.dexing.electricline.adapter.VillageAdapter;
 import com.dexing.electricline.model.BoxUser;
 import com.dexing.electricline.model.EPoint;
-import com.dexing.electricline.model.Village;
 
 import java.util.List;
 
@@ -26,12 +24,16 @@ import butterknife.OnClick;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 public class BoxUserActivity extends BaseActivity {
 
     private EPoint currentPoint;
-    @BindView(R.id.txtTitle)
-    TextView txtTitle;
+    @BindView(R.id.edtNum)
+    EditText edtNum;
+    @BindView(R.id.edtPropertyNum)
+    EditText edtPropertyNum;
+
     @BindView(R.id.refresh_layout)
     SwipeRefreshLayout refresh_layout;
     @BindView(R.id.recycleView)
@@ -39,6 +41,8 @@ public class BoxUserActivity extends BaseActivity {
     @BindView(R.id.floatingActionButton)
     FloatingActionButton floatingActionButton;
     private BoxUserAdapter adapter;
+    @BindView(R.id.progress)
+    ProgressBar progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +55,9 @@ public class BoxUserActivity extends BaseActivity {
         }
         if (currentPoint != null) {
             setTitle(currentPoint.getNumber());
-            txtTitle.setText("表箱编号："+currentPoint.getNumber());
-
+            edtNum.setText(currentPoint.getNumber());
+            edtNum.setSelection(edtNum.getText().length());
+            edtPropertyNum.setText(currentPoint.getPropertyNum());
             initRecyclerView(recycleView, refresh_layout);
         } else {
             Toast.makeText(this, "数据参数错误", Toast.LENGTH_SHORT).show();
@@ -100,13 +105,37 @@ public class BoxUserActivity extends BaseActivity {
         });
     }
 
-    @OnClick(R.id.floatingActionButton)
+    @OnClick({R.id.floatingActionButton, R.id.btnOK})
     void viewOnClick(View view) {
         switch (view.getId()) {
             case R.id.floatingActionButton:
                 Intent intent = new Intent(BoxUserActivity.this, UserEditActivity.class);
-                intent.putExtra("point",currentPoint);
+                intent.putExtra("point", currentPoint);
                 startActivity(intent);
+                break;
+            case R.id.btnOK:
+                String number = edtNum.getText().toString().trim();
+                String property = edtPropertyNum.getText().toString().trim();
+                if (number.isEmpty() || property.isEmpty()) {
+                    Toast.makeText(this, "请将资料输入完整", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                currentPoint.setNumber(number);
+                currentPoint.setPropertyNum(property);
+                progress.setVisibility(View.VISIBLE);
+
+                currentPoint.update(new UpdateListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        progress.setVisibility(View.GONE);
+                        if (e == null) {
+                            Toast.makeText(BoxUserActivity.this, "修改成功", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(BoxUserActivity.this, "修改失败", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
                 break;
         }
     }

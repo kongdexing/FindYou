@@ -8,14 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dexing.electricline.R;
 import com.dexing.electricline.model.BoxUser;
 import com.dexing.electricline.model.EPoint;
-import com.dexing.electricline.model.Village;
-import com.dexing.electricline.ui.BoxUserActivity;
-import com.dexing.electricline.ui.DrawLineActivity;
 import com.dexing.electricline.ui.UserEditActivity;
 
 import java.util.ArrayList;
@@ -58,7 +54,6 @@ public class BoxUserAdapter extends RecyclerView.Adapter {
             return;
         }
         final MyViewHolder viewHolder = (MyViewHolder) holder;
-        viewHolder.txtPointNum.setText("表箱编号：" + currentPoint.getNumber());
         viewHolder.txtUserNum.setText("用户编号：" + boxUser.getUserNum());
         viewHolder.txtUserName.setText("用户名：" + boxUser.getUserName());
         viewHolder.txtUserPhone.setText("联系方式：" + boxUser.getUserPhone());
@@ -84,8 +79,6 @@ public class BoxUserAdapter extends RecyclerView.Adapter {
         @BindView(R.id.llContent)
         LinearLayout llContent;
 
-        @BindView(R.id.txtPointNum)
-        TextView txtPointNum;
         @BindView(R.id.txtUserNum)
         TextView txtUserNum;
 

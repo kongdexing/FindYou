@@ -8,13 +8,6 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/txtPointNum"
-        style="@style/mineText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="" />
-
-    <TextView
         android:id="@+id/txtUserNum"
         style="@style/mineText"
         android:layout_width="match_parent"
@@ -42,4 +35,8 @@
         android:layout_height="wrap_content"
         android:text="" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_black_1"/>
 </LinearLayout>

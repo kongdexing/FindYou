@@ -3,28 +3,24 @@ package com.dexing.electricline.ui;
 import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amap.api.maps2d.AMap;
 import com.amap.api.maps2d.CameraUpdateFactory;
 import com.amap.api.maps2d.MapView;
-import com.amap.api.maps2d.model.BitmapDescriptor;
 import com.amap.api.maps2d.model.BitmapDescriptorFactory;
 import com.amap.api.maps2d.model.LatLng;
 import com.amap.api.maps2d.model.LatLngBounds;
@@ -38,7 +34,6 @@ import com.dexing.electricline.view.BottomPointView;
 import com.dexing.electricline.view.CustomBoxDialog;
 import com.dexing.electricline.view.CustomDialog;
 import com.dexing.electricline.view.CustomEditDialog;
-import com.dexing.electricline.view.MarkerPoleNumView;
 import com.dexing.electricline.view.MarkerView;
 
 import java.util.List;
@@ -97,19 +92,6 @@ public class DrawLineActivity extends BaseLineActivity implements AMap.OnMapClic
 
     private void init() {
 
-        spinnerPoint.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position == TYPE_POLE_12) {
-
-                } else {
-
-                }
-
-                point_type = position;
-            }
-        });
-
         if (aMap == null) {
             aMap = mapView.getMap();
         }
@@ -132,17 +114,7 @@ public class DrawLineActivity extends BaseLineActivity implements AMap.OnMapClic
                     EPoint point = list.get(i);
                     LatLng latLng = point.getLatLng();
                     bounds.include(latLng);
-                    MarkerView markerView = new MarkerView(DrawLineActivity.this);
-                    MarkerOptions markerOption = new MarkerOptions().position(latLng);
-                    if (point.getType() == 1) {
-                        markerView.isPolePoint(true);
-                        markerOption.title("电线杆：" + point.getNumber());
-                    } else {
-                        markerView.isPolePoint(false);
-                        markerOption.title("电表箱：" + point.getNumber());
-                    }
-                    markerView.setPointNum(point.getNumber());
-                    markerOption.icon(BitmapDescriptorFactory.fromView(markerView));
+                    MarkerOptions markerOption = getMarkerOptions(point);
                     marker = aMap.addMarker(markerOption);
                     marker.setObject(point);
                 }
@@ -181,7 +153,6 @@ public class DrawLineActivity extends BaseLineActivity implements AMap.OnMapClic
                 floatingActionButton.setVisibility(View.GONE);
                 rlTop.setVisibility(View.VISIBLE);
                 img_center.setVisibility(View.VISIBLE);
-                point_type = spinnerPoint.getSelectedItemPosition();
                 break;
             case R.id.btnCancel:
                 floatingActionButton.setVisibility(View.VISIBLE);
@@ -203,16 +174,13 @@ public class DrawLineActivity extends BaseLineActivity implements AMap.OnMapClic
                 });
                 break;
             case R.id.btnOK:
-//                if (point_type == 0) {
-//                    Toast.makeText(this, R.string.toast_choose_point, Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
                 int x = img_center.getLeft() + img_center.getWidth() / 2;
                 int y = img_center.getBottom();
                 LatLng mLatlng = toGeoLocation(x, y);
 //                if (mLatlng != null) {
 //                    return;
 //                }
+                point_type = spinnerPoint.getSelectedItemPosition();
                 final EPoint point = new EPoint();
                 point.setLatitude(mLatlng.latitude);
                 point.setLongitude(mLatlng.longitude);
@@ -230,7 +198,8 @@ public class DrawLineActivity extends BaseLineActivity implements AMap.OnMapClic
                                 return;
                             }
                             point.setNumber(value);
-//                        addPoint(point);
+                            point.setPropertyNum(value2);
+                            addPoint(point);
                         }
                     });
                 } else {
@@ -246,7 +215,7 @@ public class DrawLineActivity extends BaseLineActivity implements AMap.OnMapClic
                                 return;
                             }
                             point.setNumber(value);
-//                        addPoint(point);
+                            addPoint(point);
                         }
                     });
                 }
@@ -327,26 +296,34 @@ public class DrawLineActivity extends BaseLineActivity implements AMap.OnMapClic
             @Override
             public void done(String objectId, BmobException e) {
                 if (e == null) {
-                    MarkerView markerView = new MarkerView(DrawLineActivity.this);
-                    MarkerOptions markerOption = new MarkerOptions().position(point.getLatLng());
-                    if (point.getType() == 1) {
-                        markerView.isPolePoint(true);
-                        markerOption.title("电线杆：" + point.getNumber());
-                    } else {
-                        markerView.isPolePoint(false);
-                        markerOption.title("电表箱：" + point.getNumber());
-                    }
-                    markerView.setPointNum(point.getNumber());
-                    markerOption.icon(BitmapDescriptorFactory.fromView(markerView));
+                    MarkerOptions markerOption = getMarkerOptions(point);
                     marker = aMap.addMarker(markerOption);
                     marker.setObject(point);
-                    toast("添加数据成功，返回objectId为：" + objectId);
+                    toast("添加数据成功");
                 } else {
                     toast("创建数据失败：" + e.getMessage());
                 }
             }
         });
 
+    }
+
+    @NonNull
+    private MarkerOptions getMarkerOptions(EPoint point) {
+        MarkerView markerView = new MarkerView(DrawLineActivity.this);
+        MarkerOptions markerOption = new MarkerOptions().position(point.getLatLng());
+        markerView.isPolePoint(point.getType());
+        if (point.getType() == 0) {
+            markerOption.title("【12米】电线杆：" + point.getNumber());
+        } else if (point.getType() == 1) {
+            markerOption.title("【15米】电线杆：" + point.getNumber());
+        } else {
+            markerOption.title("电表箱：" + point.getNumber() +
+                    "\n资产号:" + point.getPropertyNum());
+        }
+        markerView.setPointNum(point.getNumber());
+        markerOption.icon(BitmapDescriptorFactory.fromView(markerView));
+        return markerOption;
     }
 
     /**
