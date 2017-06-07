@@ -1,6 +1,5 @@
 package com.dexing.electricline.ui;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -22,6 +21,9 @@ public class UserEditActivity extends BaseActivity {
 
     @BindView(R.id.edtNum)
     EditText edtNum;
+
+    @BindView(R.id.edtPropertyNum)
+    EditText edtPropertyNum;
 
     @BindView(R.id.edtName)
     EditText edtName;
@@ -75,6 +77,7 @@ public class UserEditActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.btnOK:
                 String num = edtNum.getText().toString().trim();
+                String property = edtPropertyNum.getText().toString().trim();
                 String name = edtName.getText().toString().trim();
                 String phone = edtPhone.getText().toString().trim();
                 String mark = edtMark.getText().toString().trim();
@@ -86,7 +89,9 @@ public class UserEditActivity extends BaseActivity {
                 if (currentUser == null) {
                     BoxUser user = new BoxUser();
                     user.setEPointId(currentPoint.getObjectId());
+                    user.setVillageId(currentPoint.getVillageId());
                     user.setUserNum(num);
+                    user.setPropertyNum(property);
                     user.setUserName(name);
                     user.setUserPhone(phone);
                     user.setMark(mark);
@@ -102,7 +107,9 @@ public class UserEditActivity extends BaseActivity {
                         }
                     });
                 } else {
+                    currentUser.setVillageId(currentPoint.getVillageId());
                     currentUser.setUserNum(num);
+                    currentUser.setPropertyNum(property);
                     currentUser.setUserName(name);
                     currentUser.setUserPhone(phone);
                     currentUser.setMark(mark);

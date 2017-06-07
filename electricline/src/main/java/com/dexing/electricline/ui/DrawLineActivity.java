@@ -33,11 +33,11 @@ import com.amap.api.services.core.SuggestionCity;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.dexing.electricline.R;
+import com.dexing.electricline.model.BoxUser;
 import com.dexing.electricline.model.EPoint;
 import com.dexing.electricline.model.Help;
 import com.dexing.electricline.model.Village;
 import com.dexing.electricline.view.BottomPointView;
-import com.dexing.electricline.view.CustomBoxDialog;
 import com.dexing.electricline.view.CustomDialog;
 import com.dexing.electricline.view.CustomEditDialog;
 import com.dexing.electricline.view.MarkerView;
@@ -49,6 +49,7 @@ import butterknife.OnClick;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 
@@ -73,13 +74,8 @@ public class DrawLineActivity extends BaseLineActivity implements AMap.OnMapClic
 
     @BindView(R.id.spinnerPoint)
     Spinner spinnerPoint;
-    private PoiResult poiResult; // poi返回的结果
-    private PoiSearch.Query query;// Poi查询条件类
-    private PoiSearch poiSearch;// POI搜索
 
     private int point_type = TYPE_POLE_12;
-
-    private Village currentVillage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,10 +85,21 @@ public class DrawLineActivity extends BaseLineActivity implements AMap.OnMapClic
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            currentVillage = (Village) bundle.getSerializable("village");
-        }
-        if (currentVillage != null) {
-            init();
+            BoxUser user = (BoxUser) bundle.getSerializable("user");
+            if (user != null) {
+                BmobQuery<Village> bmobQuery = new BmobQuery<Village>();
+                bmobQuery.addWhereEqualTo("VillageId", currentVillage.getObjectId());
+                bmobQuery.getObject(user.getVillageId(), new QueryListener<Village>() {
+                    @Override
+                    public void done(Village village, BmobException e) {
+                        currentVillage = village;
+                        init();
+                    }
+                });
+            } else {
+                currentVillage = (Village) bundle.getSerializable("village");
+                init();
+            }
         } else {
             Toast.makeText(this, "数据参数错误", Toast.LENGTH_SHORT).show();
             finish();
@@ -196,7 +203,6 @@ public class DrawLineActivity extends BaseLineActivity implements AMap.OnMapClic
 
     @Override
     public void onPoiItemSearched(PoiItem item, int rCode) {
-        // TODO Auto-generated method stub
 
     }
 
@@ -263,38 +269,21 @@ public class DrawLineActivity extends BaseLineActivity implements AMap.OnMapClic
                 point.setType(point_type);
                 point.setVillageId(currentVillage.getObjectId());
 
-                //电线杆需要录入编号，电表箱需要输入电能表资产号
-                if (point_type == 2) {
-                    CustomBoxDialog dialog = new CustomBoxDialog(DrawLineActivity.this);
-                    dialog.setAlertDialogClickListener(new CustomBoxDialog.DialogClickListener() {
-                        @Override
-                        public void onPositiveClick(String value, String value2) {
-                            if (value.isEmpty() || value2.isEmpty()) {
-                                Toast.makeText(DrawLineActivity.this, "编号或资产号不可为空", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                            point.setNumber(value);
-                            point.setPropertyNum(value2);
-                            addPoint(point);
+                //输入编号
+                CustomEditDialog dialog = new CustomEditDialog(DrawLineActivity.this);
+                dialog.setTitle("编号");
+                dialog.setHintEdit("请输入编号");
+                dialog.setAlertDialogClickListener(new CustomEditDialog.DialogClickListener() {
+                    @Override
+                    public void onPositiveClick(String value) {
+                        if (value.isEmpty()) {
+                            Toast.makeText(DrawLineActivity.this, "编号不可为空", Toast.LENGTH_SHORT).show();
+                            return;
                         }
-                    });
-                } else {
-                    //输入编号
-                    CustomEditDialog dialog = new CustomEditDialog(DrawLineActivity.this);
-                    dialog.setTitle("编号");
-                    dialog.setHintEdit("请输入编号");
-                    dialog.setAlertDialogClickListener(new CustomEditDialog.DialogClickListener() {
-                        @Override
-                        public void onPositiveClick(String value) {
-                            if (value.isEmpty()) {
-                                Toast.makeText(DrawLineActivity.this, "编号不可为空", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                            point.setNumber(value);
-                            addPoint(point);
-                        }
-                    });
-                }
+                        point.setNumber(value);
+                        addPoint(point);
+                    }
+                });
                 break;
         }
     }
@@ -394,8 +383,7 @@ public class DrawLineActivity extends BaseLineActivity implements AMap.OnMapClic
         } else if (point.getType() == 1) {
             markerOption.title("【15米】电线杆：" + point.getNumber());
         } else {
-            markerOption.title("电表箱：" + point.getNumber() +
-                    "\n资产号:" + point.getPropertyNum());
+            markerOption.title("电表箱：" + point.getNumber());
         }
         markerView.setPointNum(point.getNumber());
         markerOption.icon(BitmapDescriptorFactory.fromView(markerView));

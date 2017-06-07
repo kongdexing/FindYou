@@ -31,8 +31,6 @@ public class BoxUserActivity extends BaseActivity {
     private EPoint currentPoint;
     @BindView(R.id.edtNum)
     EditText edtNum;
-    @BindView(R.id.edtPropertyNum)
-    EditText edtPropertyNum;
 
     @BindView(R.id.refresh_layout)
     SwipeRefreshLayout refresh_layout;
@@ -57,7 +55,6 @@ public class BoxUserActivity extends BaseActivity {
             setTitle(currentPoint.getNumber());
             edtNum.setText(currentPoint.getNumber());
             edtNum.setSelection(edtNum.getText().length());
-            edtPropertyNum.setText(currentPoint.getPropertyNum());
             initRecyclerView(recycleView, refresh_layout);
         } else {
             Toast.makeText(this, "数据参数错误", Toast.LENGTH_SHORT).show();
@@ -100,7 +97,7 @@ public class BoxUserActivity extends BaseActivity {
         bmobQuery.findObjects(new FindListener<BoxUser>() {
             @Override
             public void done(List<BoxUser> list, BmobException e) {
-                adapter.loadData(list, currentPoint);
+                adapter.loadData(list);
             }
         });
     }
@@ -115,13 +112,11 @@ public class BoxUserActivity extends BaseActivity {
                 break;
             case R.id.btnOK:
                 String number = edtNum.getText().toString().trim();
-                String property = edtPropertyNum.getText().toString().trim();
-                if (number.isEmpty() || property.isEmpty()) {
+                if (number.isEmpty()) {
                     Toast.makeText(this, "请将资料输入完整", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 currentPoint.setNumber(number);
-                currentPoint.setPropertyNum(property);
                 progress.setVisibility(View.VISIBLE);
 
                 currentPoint.update(new UpdateListener() {

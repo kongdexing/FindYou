@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.dexing.electricline.R;
 import com.dexing.electricline.model.BoxUser;
-import com.dexing.electricline.model.EPoint;
+import com.dexing.electricline.ui.DrawLineActivity;
 import com.dexing.electricline.ui.UserEditActivity;
 
 import java.util.ArrayList;
@@ -28,18 +28,23 @@ import butterknife.ButterKnife;
 public class BoxUserAdapter extends RecyclerView.Adapter {
 
     private List<BoxUser> listUsers = new ArrayList<>();
-    private EPoint currentPoint = null;
     private Context mContext;
+    private int goType = 0;
+    public static int GoType_User = 0;
+    public static int GoType_Search = 1;
 
     public BoxUserAdapter(Context context) {
         this.mContext = context;
     }
 
     //  添加数据
-    public void loadData(List<BoxUser> boxUsers, EPoint point) {
+    public void loadData(List<BoxUser> boxUsers) {
         listUsers = boxUsers;
-        currentPoint = point;
         notifyDataSetChanged();
+    }
+
+    public void setGoType(int type) {
+        goType = type;
     }
 
     @Override
@@ -50,11 +55,12 @@ public class BoxUserAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         final BoxUser boxUser = listUsers.get(position);
-        if (boxUser == null || currentPoint == null) {
+        if (boxUser == null) {
             return;
         }
         final MyViewHolder viewHolder = (MyViewHolder) holder;
         viewHolder.txtUserNum.setText("用户编号：" + boxUser.getUserNum());
+        viewHolder.txtPropertyNum.setText("用户资产号：" + boxUser.getPropertyNum());
         viewHolder.txtUserName.setText("用户名：" + boxUser.getUserName());
         viewHolder.txtUserPhone.setText("联系方式：" + boxUser.getUserPhone());
         viewHolder.txtMark.setText("备注：" + boxUser.getMark());
@@ -62,9 +68,15 @@ public class BoxUserAdapter extends RecyclerView.Adapter {
         viewHolder.llContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, UserEditActivity.class);
-                intent.putExtra("user", boxUser);
-                mContext.startActivity(intent);
+                if (goType == GoType_User) {
+                    Intent intent = new Intent(mContext, UserEditActivity.class);
+                    intent.putExtra("user", boxUser);
+                    mContext.startActivity(intent);
+                } else if (goType == GoType_Search) {
+                    Intent intent = new Intent(mContext, DrawLineActivity.class);
+                    intent.putExtra("user", boxUser);
+                    mContext.startActivity(intent);
+                }
             }
         });
     }
@@ -81,6 +93,9 @@ public class BoxUserAdapter extends RecyclerView.Adapter {
 
         @BindView(R.id.txtUserNum)
         TextView txtUserNum;
+
+        @BindView(R.id.txtPropertyNum)
+        TextView txtPropertyNum;
 
         @BindView(R.id.txtUserName)
         TextView txtUserName;

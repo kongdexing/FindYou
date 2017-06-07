@@ -12,7 +12,9 @@ import cn.bmob.v3.BmobObject;
 public class BoxUser extends BmobObject implements Serializable{
 
     private String EPointId;
+    private String VillageId;
     private String userNum;
+    private String propertyNum;
     private String userName;
     private String userPhone;
     private String mark;
@@ -25,12 +27,28 @@ public class BoxUser extends BmobObject implements Serializable{
         this.EPointId = EPointId;
     }
 
+    public String getVillageId() {
+        return VillageId;
+    }
+
+    public void setVillageId(String villageId) {
+        VillageId = villageId;
+    }
+
     public String getUserNum() {
         return userNum;
     }
 
     public void setUserNum(String userNum) {
         this.userNum = userNum;
+    }
+
+    public String getPropertyNum() {
+        return propertyNum;
+    }
+
+    public void setPropertyNum(String propertyNum) {
+        this.propertyNum = propertyNum;
     }
 
     public String getUserName() {
