@@ -2,20 +2,39 @@ package com.dexing.electricline.model;
 
 import com.amap.api.maps2d.model.LatLng;
 
+import org.greenrobot.greendao.annotation.Entity;
+
+import java.io.Serializable;
+
 import cn.bmob.v3.BmobObject;
+import org.greenrobot.greendao.annotation.Generated;
 
 /**
  * Created by dexing on 2017/6/1.
  * No1
  */
-
-public class EPoint extends BmobObject {
+@Entity
+public class EPoint extends BmobObject implements Serializable {
 
     private double latitude;
     private double longitude;
     private String villageId;
     private int type;//0 12米，1 15米杆，2电表箱
     private String number;//编号
+
+    @Generated(hash = 2030037275)
+    public EPoint(double latitude, double longitude, String villageId, int type,
+            String number) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.villageId = villageId;
+        this.type = type;
+        this.number = number;
+    }
+
+    @Generated(hash = 1759290670)
+    public EPoint() {
+    }
 
     public double getLatitude() {
         return latitude;

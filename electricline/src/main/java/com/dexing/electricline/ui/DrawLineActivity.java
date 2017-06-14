@@ -35,6 +35,7 @@ import com.amap.api.services.poisearch.PoiSearch;
 import com.dexing.electricline.R;
 import com.dexing.electricline.model.BoxUser;
 import com.dexing.electricline.model.EPoint;
+import com.dexing.electricline.model.GreenDaoHelper;
 import com.dexing.electricline.model.Help;
 import com.dexing.electricline.model.Village;
 import com.dexing.electricline.view.BottomPointView;
@@ -144,6 +145,17 @@ public class DrawLineActivity extends BaseLineActivity implements AMap.OnMapClic
             }
         });
 
+        BmobQuery<BoxUser> userQuery = new BmobQuery<BoxUser>();
+        userQuery.addWhereEqualTo("VillageId", currentVillage.getObjectId());
+        userQuery.findObjects(new FindListener<BoxUser>() {
+            @Override
+            public void done(List<BoxUser> list, BmobException e) {
+                if (e == null) {
+                    Toast.makeText(DrawLineActivity.this, "user size " + list.size(), Toast.LENGTH_SHORT).show();
+                    GreenDaoHelper.getInstance().insertBoxUser(currentVillage, list);
+                }
+            }
+        });
     }
 
     /**

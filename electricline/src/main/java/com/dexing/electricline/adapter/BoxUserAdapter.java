@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.dexing.electricline.R;
 import com.dexing.electricline.model.BoxUser;
+import com.dexing.electricline.model.EPoint;
 import com.dexing.electricline.ui.DrawLineActivity;
 import com.dexing.electricline.ui.UserEditActivity;
 
@@ -32,14 +33,16 @@ public class BoxUserAdapter extends RecyclerView.Adapter {
     private int goType = 0;
     public static int GoType_User = 0;
     public static int GoType_Search = 1;
+    private EPoint currentPoint;
 
     public BoxUserAdapter(Context context) {
         this.mContext = context;
     }
 
     //  添加数据
-    public void loadData(List<BoxUser> boxUsers) {
+    public void loadData(List<BoxUser> boxUsers, EPoint point) {
         listUsers = boxUsers;
+        currentPoint = point;
         notifyDataSetChanged();
     }
 
@@ -60,7 +63,7 @@ public class BoxUserAdapter extends RecyclerView.Adapter {
         }
         final MyViewHolder viewHolder = (MyViewHolder) holder;
         viewHolder.txtUserNum.setText("用户编号：" + boxUser.getUserNum());
-        viewHolder.txtPropertyNum.setText("用户资产号：" + boxUser.getPropertyNum());
+        viewHolder.txtPropertyNum.setText("电能表资产号：" + boxUser.getPropertyNum());
         viewHolder.txtUserName.setText("用户名：" + boxUser.getUserName());
         viewHolder.txtUserPhone.setText("联系方式：" + boxUser.getUserPhone());
         viewHolder.txtMark.setText("备注：" + boxUser.getMark());
@@ -71,6 +74,7 @@ public class BoxUserAdapter extends RecyclerView.Adapter {
                 if (goType == GoType_User) {
                     Intent intent = new Intent(mContext, UserEditActivity.class);
                     intent.putExtra("user", boxUser);
+                    intent.putExtra("point",currentPoint);
                     mContext.startActivity(intent);
                 } else if (goType == GoType_Search) {
                     Intent intent = new Intent(mContext, DrawLineActivity.class);

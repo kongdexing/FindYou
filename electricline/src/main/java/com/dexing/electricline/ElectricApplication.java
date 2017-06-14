@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.Display;
 import android.view.WindowManager;
 
+import com.dexing.electricline.model.GreenDaoHelper;
 import com.tencent.bugly.Bugly;
 
 import cn.bmob.v3.Bmob;
@@ -32,6 +33,9 @@ public class ElectricApplication extends Application {
     }
 
     private void init() {
+
+        GreenDaoHelper.getInstance().initGreenDao(this);
+
         //第一：默认初始化
         Bmob.initialize(this, "88c47121810fa84a62e963d753248d1c");
         // 注:自v3.5.2开始，数据sdk内部缝合了统计sdk，开发者无需额外集成，传渠道参数即可，不传默认没开启数据统计功能

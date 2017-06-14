@@ -7,7 +7,6 @@
       <module fileurl="file://$PROJECT_DIR$/electricline/electricline.iml" filepath="$PROJECT_DIR$/electricline/electricline.iml" />
       <module fileurl="file://$PROJECT_DIR$/uppaydemo/uppaydemo.iml" filepath="$PROJECT_DIR$/uppaydemo/uppaydemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/volley/volley.iml" filepath="$PROJECT_DIR$/volley/volley.iml" />
-      <module fileurl="file://$PROJECT_DIR$/wechatpaytest/wechatpaytest.iml" filepath="$PROJECT_DIR$/wechatpaytest/wechatpaytest.iml" />
       <module fileurl="file://$PROJECT_DIR$/widget/widget.iml" filepath="$PROJECT_DIR$/widget/widget.iml" />
     </modules>
   </component>

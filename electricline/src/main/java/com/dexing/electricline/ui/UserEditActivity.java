@@ -2,6 +2,7 @@ package com.dexing.electricline.ui;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -62,6 +63,7 @@ public class UserEditActivity extends BaseActivity {
 
         if (currentUser != null) {
             edtNum.setText(currentUser.getUserNum());
+            edtPropertyNum.setText(currentUser.getPropertyNum());
             edtName.setText(currentUser.getUserName());
             edtPhone.setText(currentUser.getUserPhone());
             edtMark.setText(currentUser.getMark());
@@ -102,7 +104,7 @@ public class UserEditActivity extends BaseActivity {
                                 Toast.makeText(UserEditActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
                                 finish();
                             } else {
-                                Toast.makeText(UserEditActivity.this, "保存失败", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(UserEditActivity.this, "保存失败" + e.getErrorCode() + e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -113,14 +115,15 @@ public class UserEditActivity extends BaseActivity {
                     currentUser.setUserName(name);
                     currentUser.setUserPhone(phone);
                     currentUser.setMark(mark);
-                    currentUser.update(currentPoint.getObjectId(), new UpdateListener() {
+                    currentUser.update(currentUser.getObjectId(), new UpdateListener() {
                         @Override
                         public void done(BmobException e) {
                             if (e == null) {
                                 Toast.makeText(UserEditActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
                                 finish();
                             } else {
-                                Toast.makeText(UserEditActivity.this, "保存失败", Toast.LENGTH_SHORT).show();
+                                Log.i(TAG, "done: "+e.toString());
+                                Toast.makeText(UserEditActivity.this, "保存失败" + e.getErrorCode() + e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }
                     });

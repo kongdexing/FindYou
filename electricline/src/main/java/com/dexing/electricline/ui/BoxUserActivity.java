@@ -97,7 +97,7 @@ public class BoxUserActivity extends BaseActivity {
         bmobQuery.findObjects(new FindListener<BoxUser>() {
             @Override
             public void done(List<BoxUser> list, BmobException e) {
-                adapter.loadData(list);
+                adapter.loadData(list,currentPoint);
             }
         });
     }

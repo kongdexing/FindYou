@@ -1,5 +1,8 @@
 package com.dexing.electricline.model;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
+
 import java.io.Serializable;
 
 import cn.bmob.v3.BmobObject;
@@ -8,7 +11,7 @@ import cn.bmob.v3.BmobObject;
  * Created by dexing on 2017/6/1.
  * No1
  */
-
+@Entity
 public class BoxUser extends BmobObject implements Serializable{
 
     private String EPointId;
@@ -18,6 +21,22 @@ public class BoxUser extends BmobObject implements Serializable{
     private String userName;
     private String userPhone;
     private String mark;
+
+    @Generated(hash = 1934657911)
+    public BoxUser(String EPointId, String VillageId, String userNum,
+            String propertyNum, String userName, String userPhone, String mark) {
+        this.EPointId = EPointId;
+        this.VillageId = VillageId;
+        this.userNum = userNum;
+        this.propertyNum = propertyNum;
+        this.userName = userName;
+        this.userPhone = userPhone;
+        this.mark = mark;
+    }
+
+    @Generated(hash = 2063942906)
+    public BoxUser() {
+    }
 
     public String getEPointId() {
         return EPointId;
