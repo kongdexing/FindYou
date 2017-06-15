@@ -29,7 +29,7 @@
             android:maxLength="100"
             android:text=""
             android:textColor="@color/color_black_2"
-            android:textSize="@dimen/sp_18" />
+            android:textSize="@dimen/sp_16" />
     </LinearLayout>
 
     <LinearLayout
@@ -55,7 +55,7 @@
             android:maxLength="30"
             android:text=""
             android:textColor="@color/color_black_2"
-            android:textSize="@dimen/sp_18" />
+            android:textSize="@dimen/sp_16" />
     </LinearLayout>
 
     <LinearLayout
@@ -80,7 +80,7 @@
             android:maxLength="100"
             android:text=""
             android:textColor="@color/color_black_2"
-            android:textSize="@dimen/sp_18" />
+            android:textSize="@dimen/sp_16" />
     </LinearLayout>
 
     <LinearLayout
@@ -106,7 +106,7 @@
             android:maxLength="100"
             android:text=""
             android:textColor="@color/color_black_2"
-            android:textSize="@dimen/sp_18" />
+            android:textSize="@dimen/sp_16" />
     </LinearLayout>
 
     <LinearLayout
@@ -131,7 +131,7 @@
             android:maxLength="100"
             android:text=""
             android:textColor="@color/color_black_2"
-            android:textSize="@dimen/sp_18" />
+            android:textSize="@dimen/sp_16" />
     </LinearLayout>
 
     <Button

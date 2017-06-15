@@ -63,6 +63,7 @@ public class UserEditActivity extends BaseActivity {
 
         if (currentUser != null) {
             edtNum.setText(currentUser.getUserNum());
+            edtNum.setSelection(edtNum.getText().length());
             edtPropertyNum.setText(currentUser.getPropertyNum());
             edtName.setText(currentUser.getUserName());
             edtPhone.setText(currentUser.getUserPhone());
@@ -122,7 +123,7 @@ public class UserEditActivity extends BaseActivity {
                                 Toast.makeText(UserEditActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
                                 finish();
                             } else {
-                                Log.i(TAG, "done: "+e.toString());
+                                Log.i(TAG, "done: " + e.toString());
                                 Toast.makeText(UserEditActivity.this, "保存失败" + e.getErrorCode() + e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }

@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.amap.api.maps2d.AMap;
 import com.amap.api.maps2d.CameraUpdateFactory;
 import com.amap.api.maps2d.MapView;
+import com.amap.api.maps2d.model.BitmapDescriptor;
 import com.amap.api.maps2d.model.BitmapDescriptorFactory;
 import com.amap.api.maps2d.model.LatLng;
 import com.amap.api.maps2d.model.LatLngBounds;
@@ -39,10 +40,12 @@ import com.dexing.electricline.model.GreenDaoHelper;
 import com.dexing.electricline.model.Help;
 import com.dexing.electricline.model.Village;
 import com.dexing.electricline.view.BottomPointView;
+import com.dexing.electricline.view.BoxMarkerView;
 import com.dexing.electricline.view.CustomDialog;
 import com.dexing.electricline.view.CustomEditDialog;
 import com.dexing.electricline.view.MarkerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -86,29 +89,15 @@ public class DrawLineActivity extends BaseLineActivity implements AMap.OnMapClic
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            BoxUser user = (BoxUser) bundle.getSerializable("user");
-            if (user != null) {
-                BmobQuery<Village> bmobQuery = new BmobQuery<Village>();
-                bmobQuery.addWhereEqualTo("VillageId", currentVillage.getObjectId());
-                bmobQuery.getObject(user.getVillageId(), new QueryListener<Village>() {
-                    @Override
-                    public void done(Village village, BmobException e) {
-                        currentVillage = village;
-                        init();
-                    }
-                });
-            } else {
-                currentVillage = (Village) bundle.getSerializable("village");
-                init();
-            }
+            currentVillage = (Village) bundle.getSerializable("village");
+            init();
         } else {
             Toast.makeText(this, "数据参数错误", Toast.LENGTH_SHORT).show();
             finish();
         }
     }
 
-    private void init() {
-
+    public void init() {
         if (aMap == null) {
             aMap = mapView.getMap();
         }
@@ -127,21 +116,25 @@ public class DrawLineActivity extends BaseLineActivity implements AMap.OnMapClic
             @Override
             public void done(List<EPoint> list, BmobException e) {
                 progress.setVisibility(View.GONE);
-                if (list.size() == 0) {
-                    Log.i(TAG, "done: point size is 0");
-                    //检索
-                    doSearchQuery();
-                    return;
+                if (e == null) {
+                    if (list.size() == 0) {
+                        Log.i(TAG, "done: point size is 0");
+                        //检索
+                        doSearchQuery();
+                        return;
+                    }
+                    for (int i = 0; i < list.size(); i++) {
+                        EPoint point = list.get(i);
+                        LatLng latLng = point.getLatLng();
+                        bounds.include(latLng);
+                        MarkerOptions markerOption = getMarkerOptions(point);
+                        marker = aMap.addMarker(markerOption);
+                        marker.setObject(point);
+                    }
+                    aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 20));
+                } else {
+
                 }
-                for (int i = 0; i < list.size(); i++) {
-                    EPoint point = list.get(i);
-                    LatLng latLng = point.getLatLng();
-                    bounds.include(latLng);
-                    MarkerOptions markerOption = getMarkerOptions(point);
-                    marker = aMap.addMarker(markerOption);
-                    marker.setObject(point);
-                }
-                aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 20));
             }
         });
 
@@ -387,9 +380,8 @@ public class DrawLineActivity extends BaseLineActivity implements AMap.OnMapClic
 
     @NonNull
     private MarkerOptions getMarkerOptions(EPoint point) {
-        MarkerView markerView = new MarkerView(DrawLineActivity.this);
         MarkerOptions markerOption = new MarkerOptions().position(point.getLatLng());
-        markerView.isPolePoint(point.getType());
+
         if (point.getType() == 0) {
             markerOption.title("【12米】电线杆：" + point.getNumber());
         } else if (point.getType() == 1) {
@@ -397,8 +389,35 @@ public class DrawLineActivity extends BaseLineActivity implements AMap.OnMapClic
         } else {
             markerOption.title("电表箱：" + point.getNumber());
         }
-        markerView.setPointNum(point.getNumber());
-        markerOption.icon(BitmapDescriptorFactory.fromView(markerView));
+
+        if (beamPointId != null && point.getObjectId().equals(beamPointId)) {
+            // 动画效果
+            BoxMarkerView box1 = new BoxMarkerView(this);
+            BoxMarkerView box2 = new BoxMarkerView(this);
+            BoxMarkerView box3 = new BoxMarkerView(this);
+            BoxMarkerView box4 = new BoxMarkerView(this);
+            box1.setPointNum(point.getNumber());
+            box1.setBackResource(R.drawable.icon_box_1);
+            box2.setPointNum(point.getNumber());
+            box2.setBackResource(R.drawable.icon_box_2);
+            box3.setPointNum(point.getNumber());
+            box3.setBackResource(R.drawable.icon_box_3);
+            box4.setPointNum(point.getNumber());
+            box4.setBackResource(R.drawable.icon_box_4);
+
+            ArrayList<BitmapDescriptor> giflist = new ArrayList<BitmapDescriptor>();
+            giflist.add(BitmapDescriptorFactory.fromView(box1));
+            giflist.add(BitmapDescriptorFactory.fromView(box2));
+            giflist.add(BitmapDescriptorFactory.fromView(box3));
+            giflist.add(BitmapDescriptorFactory.fromView(box4));
+//            markerOption.icon(null);
+            markerOption.icons(giflist).period(2);
+        } else {
+            MarkerView markerView = new MarkerView(DrawLineActivity.this);
+            markerView.isPolePoint(point, beamPointId);
+            markerView.setPointNum(point.getNumber());
+            markerOption.icon(BitmapDescriptorFactory.fromView(markerView));
+        }
         return markerOption;
     }
 

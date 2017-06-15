@@ -42,7 +42,11 @@
         <activity
             android:name=".ui.DrawLineActivity"
             android:launchMode="singleTask" />
-        <activity android:name=".ui.BoxUserActivity" />
+        <activity
+            android:name=".ui.BoxUserActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|locale"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+
         <activity android:name=".ui.UserEditActivity" />
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"

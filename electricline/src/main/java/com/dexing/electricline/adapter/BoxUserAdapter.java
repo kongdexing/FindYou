@@ -13,6 +13,7 @@ import com.dexing.electricline.R;
 import com.dexing.electricline.model.BoxUser;
 import com.dexing.electricline.model.EPoint;
 import com.dexing.electricline.ui.DrawLineActivity;
+import com.dexing.electricline.ui.SearchActivity;
 import com.dexing.electricline.ui.UserEditActivity;
 
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ public class BoxUserAdapter extends RecyclerView.Adapter {
 
     //  添加数据
     public void loadData(List<BoxUser> boxUsers, EPoint point) {
+        listUsers.clear();
         listUsers = boxUsers;
         currentPoint = point;
         notifyDataSetChanged();
@@ -74,12 +76,13 @@ public class BoxUserAdapter extends RecyclerView.Adapter {
                 if (goType == GoType_User) {
                     Intent intent = new Intent(mContext, UserEditActivity.class);
                     intent.putExtra("user", boxUser);
-                    intent.putExtra("point",currentPoint);
+                    intent.putExtra("point", currentPoint);
                     mContext.startActivity(intent);
                 } else if (goType == GoType_Search) {
-                    Intent intent = new Intent(mContext, DrawLineActivity.class);
+                    Intent intent = new Intent();
                     intent.putExtra("user", boxUser);
-                    mContext.startActivity(intent);
+                    ((SearchActivity) mContext).setResult(1001, intent);
+                    ((SearchActivity) mContext).finish();
                 }
             }
         });

@@ -2,6 +2,7 @@ package com.dexing.electricline.model;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
@@ -45,6 +46,8 @@ public class GreenDaoHelper {
 
     public void initGreenDao(Context context) {
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(context, "electric", null);
+        QueryBuilder.LOG_SQL = true;
+        QueryBuilder.LOG_VALUES = true;
 
         writeDB = helper.getWritableDatabase();
         readDB = helper.getReadableDatabase();
@@ -61,14 +64,19 @@ public class GreenDaoHelper {
         }
     }
 
-    public List<BoxUser> getUserByInfo(String villageId, String number, String name) {
+    public List<BoxUser> getUserByInfo(String villageId) {
         if (readDaoSession != null) {
+//            String sql = "select * from " + BoxUserDao.TABLENAME + " where " + BoxUserDao.Properties.VillageId.columnName + "='" + villageId + "'"
+//                    + " and (" + BoxUserDao.Properties.UserNum.columnName + " like '%" + number + "%' or " + BoxUserDao.Properties.UserName.columnName + " like '%" + name + "%')";
             QueryBuilder qb = readDaoSession.getBoxUserDao().queryBuilder();
-            qb.where(BoxUserDao.Properties.VillageId.eq(villageId),
-                    qb.or(BoxUserDao.Properties.UserNum.like(number), BoxUserDao.Properties.UserName.like(name)));
-//qb.or(BoxUserDao.Properties.UserNum.like(number), BoxUserDao.Properties.UserName.like(name))
+            qb.where(BoxUserDao.Properties.VillageId.eq(villageId));
+//            qb.or(BoxUserDao.Properties.UserNum.like(number), BoxUserDao.Properties.UserName.like(name))
+            return qb.build().list();
 
-            return qb.list();
+//            return readDaoSession.getBoxUserDao().queryRaw(" where ? = ? and (? like ? or ? like ?)",
+//                    BoxUserDao.Properties.VillageId.columnName, villageId, BoxUserDao.Properties.UserNum.columnName,
+//                    "'%" + number + "%'", BoxUserDao.Properties.UserName.columnName, "'%" + name + "%'");
+
         }
         return new ArrayList<BoxUser>();
     }
