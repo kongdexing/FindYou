@@ -10,7 +10,11 @@ import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.dexing.electricline.R;
 import com.dexing.electricline.model.BoxUser;
+import com.dexing.electricline.model.EPoint;
 import com.dexing.electricline.model.Village;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
@@ -33,6 +37,7 @@ public class BaseLineActivity extends BaseActivity {
 
     public Village currentVillage;
     public String beamPointId = null;
+    public List<EPoint> allPoint = new ArrayList<>();
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -60,23 +65,15 @@ public class BaseLineActivity extends BaseActivity {
                 if (bundle != null) {
                     final BoxUser user = (BoxUser) bundle.getSerializable("user");
                     if (user != null) {
-                        BmobQuery<Village> bmobQuery = new BmobQuery<Village>();
-                        bmobQuery.addWhereEqualTo("VillageId", currentVillage.getObjectId());
-                        bmobQuery.getObject(user.getVillageId(), new QueryListener<Village>() {
-                            @Override
-                            public void done(Village village, BmobException e) {
-                                currentVillage = village;
-                                beamPointId = user.getEPointId();
-                                init();
-                            }
-                        });
+                        beamPointId = user.getEPointId();
+                        drawPointLine(allPoint);
                     }
                 }
             }
         }
     }
 
-    public void init() {
+    public void drawPointLine(List<EPoint> list) {
     }
 
 }

@@ -78,7 +78,6 @@ public class DrawLineActivity extends BaseLineActivity implements AMap.OnMapClic
 
     @BindView(R.id.spinnerPoint)
     Spinner spinnerPoint;
-
     private int point_type = TYPE_POLE_12;
 
     @Override
@@ -107,7 +106,6 @@ public class DrawLineActivity extends BaseLineActivity implements AMap.OnMapClic
 
         setTitle(currentVillage.getName());
 
-        final LatLngBounds.Builder bounds = LatLngBounds.builder();
         //获取该村节点
         BmobQuery<EPoint> bmobQuery = new BmobQuery<EPoint>();
         bmobQuery.addWhereEqualTo("villageId", currentVillage.getObjectId());
@@ -117,21 +115,8 @@ public class DrawLineActivity extends BaseLineActivity implements AMap.OnMapClic
             public void done(List<EPoint> list, BmobException e) {
                 progress.setVisibility(View.GONE);
                 if (e == null) {
-                    if (list.size() == 0) {
-                        Log.i(TAG, "done: point size is 0");
-                        //检索
-                        doSearchQuery();
-                        return;
-                    }
-                    for (int i = 0; i < list.size(); i++) {
-                        EPoint point = list.get(i);
-                        LatLng latLng = point.getLatLng();
-                        bounds.include(latLng);
-                        MarkerOptions markerOption = getMarkerOptions(point);
-                        marker = aMap.addMarker(markerOption);
-                        marker.setObject(point);
-                    }
-                    aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 20));
+                    allPoint = list;
+                    drawPointLine(allPoint);
                 } else {
 
                 }
@@ -144,11 +129,30 @@ public class DrawLineActivity extends BaseLineActivity implements AMap.OnMapClic
             @Override
             public void done(List<BoxUser> list, BmobException e) {
                 if (e == null) {
-                    Toast.makeText(DrawLineActivity.this, "user size " + list.size(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(DrawLineActivity.this, "user size " + list.size(), Toast.LENGTH_SHORT).show();
                     GreenDaoHelper.getInstance().insertBoxUser(currentVillage, list);
                 }
             }
         });
+    }
+
+    public void drawPointLine(List<EPoint> list) {
+        if (list.size() == 0) {
+            Log.i(TAG, "done: point size is 0");
+            //检索
+            doSearchQuery();
+            return;
+        }
+        LatLngBounds.Builder bounds = LatLngBounds.builder();
+        for (int i = 0; i < list.size(); i++) {
+            EPoint point = list.get(i);
+            LatLng latLng = point.getLatLng();
+            bounds.include(latLng);
+            MarkerOptions markerOption = getMarkerOptions(point);
+            marker = aMap.addMarker(markerOption);
+            marker.setObject(point);
+        }
+        aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 20));
     }
 
     /**
