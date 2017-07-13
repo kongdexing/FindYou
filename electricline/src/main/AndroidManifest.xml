@@ -38,7 +38,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.VillageListActivity"></activity>
+        <activity android:name=".ui.VillageListActivity" />
         <activity
             android:name=".ui.DrawLineActivity"
             android:launchMode="singleTask" />
@@ -46,7 +46,6 @@
             android:name=".ui.BoxUserActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
-
         <activity android:name=".ui.UserEditActivity" />
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"
@@ -64,7 +63,8 @@
         </provider>
 
         <activity android:name=".ui.VillageEditActivity" />
-        <activity android:name=".ui.SearchActivity"></activity>
+        <activity android:name=".ui.SearchActivity" />
+        <activity android:name=".ui.line.DrawWireActivity"></activity>
     </application>
 
 </manifest>

@@ -7,4 +7,11 @@
         android:actionViewClass="android.widget.SearchView"
         android:icon="@drawable/ic_search_black_24dp"
         android:title="搜索" />
+
+    <item
+        android:id="@+id/app_bar_draw"
+        android:actionViewClass="android.widget.SearchView"
+        android:icon="@drawable/ic_search_black_24dp"
+        android:title="划线路" />
+
 </menu>

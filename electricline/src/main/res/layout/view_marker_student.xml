@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/fl_Content"
-    android:layout_width="@dimen/dp_40"
-    android:layout_height="@dimen/dp_50">
+    android:layout_width="@dimen/dp_25"
+    android:layout_height="@dimen/dp_30">
 
     <com.dexing.electricline.view.CircularImageView
         android:id="@+id/imgHead"
         android:layout_width="@dimen/dp_25"
-        android:layout_height="@dimen/dp_25"
-        android:layout_gravity="center|top"
-        android:layout_marginTop="@dimen/dp_6"/>
+        android:layout_height="@dimen/dp_30"
+        android:layout_gravity="center|top" />
 
     <TextView
         android:id="@+id/txtNum"
         android:layout_width="@dimen/dp_12"
         android:layout_height="@dimen/dp_12"
         android:layout_gravity="center"
+        android:layout_marginTop="@dimen/dp_4"
         android:background="@drawable/bg_circle_dot"
-        android:text="3"
         android:gravity="center"
+        android:text="3"
         android:textColor="@color/colorWhite"
         android:textSize="8sp" />
 

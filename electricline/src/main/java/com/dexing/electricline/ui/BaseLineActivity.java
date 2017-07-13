@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
@@ -12,13 +11,10 @@ import com.dexing.electricline.R;
 import com.dexing.electricline.model.BoxUser;
 import com.dexing.electricline.model.EPoint;
 import com.dexing.electricline.model.Village;
+import com.dexing.electricline.ui.line.DrawWireActivity;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.QueryListener;
 
 /**
  * Created by dexing on 2017/6/2.
@@ -52,6 +48,10 @@ public class BaseLineActivity extends BaseActivity {
             intent.putExtra("village", currentVillage);
             this.startActivityForResult(intent, 1000);
 //            finish();
+        } else if (item.getItemId() == R.id.app_bar_draw) {
+            Intent intent = new Intent(this, DrawWireActivity.class);
+            intent.putExtra("village", currentVillage);
+            this.startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

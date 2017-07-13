@@ -81,4 +81,18 @@ public class GreenDaoHelper {
         return new ArrayList<BoxUser>();
     }
 
+    public void insertEPoint(List<EPoint> ePoints){
+        if (writeDaoSession != null) {
+            writeDaoSession.getEPointDao().insertOrReplaceInTx(ePoints);
+        }
+    }
+
+    public List<EPoint> getEPointsByVillageId(String villageId) {
+        List<EPoint> ePoints = new ArrayList<>();
+        if (readDaoSession != null) {
+            ePoints = readDaoSession.getEPointDao().queryBuilder().where(EPointDao.Properties.VillageId.eq(villageId)).list();
+        }
+        return ePoints;
+    }
+
 }

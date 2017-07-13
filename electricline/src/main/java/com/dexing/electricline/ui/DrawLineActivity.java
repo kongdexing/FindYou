@@ -1,6 +1,7 @@
 package com.dexing.electricline.ui;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import com.amap.api.maps2d.model.LatLng;
 import com.amap.api.maps2d.model.LatLngBounds;
 import com.amap.api.maps2d.model.Marker;
 import com.amap.api.maps2d.model.MarkerOptions;
+import com.amap.api.maps2d.model.PolylineOptions;
 import com.amap.api.maps2d.overlay.PoiOverlay;
 import com.amap.api.services.core.AMapException;
 import com.amap.api.services.core.PoiItem;
@@ -38,7 +40,9 @@ import com.dexing.electricline.model.BoxUser;
 import com.dexing.electricline.model.EPoint;
 import com.dexing.electricline.model.GreenDaoHelper;
 import com.dexing.electricline.model.Help;
+import com.dexing.electricline.model.Line;
 import com.dexing.electricline.model.Village;
+import com.dexing.electricline.ui.line.DrawWireActivity;
 import com.dexing.electricline.view.BottomPointView;
 import com.dexing.electricline.view.BoxMarkerView;
 import com.dexing.electricline.view.CustomDialog;
@@ -57,6 +61,9 @@ import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 
+/**
+ * 地图上划线，锚点
+ */
 public class DrawLineActivity extends BaseLineActivity implements AMap.OnMapClickListener,
         AMap.OnMarkerClickListener, AMap.OnInfoWindowClickListener, PoiSearch.OnPoiSearchListener {
 
@@ -122,7 +129,7 @@ public class DrawLineActivity extends BaseLineActivity implements AMap.OnMapClic
                 }
             }
         });
-
+        getLineToDrawWire();
         BmobQuery<BoxUser> userQuery = new BmobQuery<BoxUser>();
         userQuery.addWhereEqualTo("VillageId", currentVillage.getObjectId());
         userQuery.findObjects(new FindListener<BoxUser>() {
@@ -137,12 +144,14 @@ public class DrawLineActivity extends BaseLineActivity implements AMap.OnMapClic
     }
 
     public void drawPointLine(List<EPoint> list) {
+        Log.i(TAG, "done: point size is " + list.size());
         if (list.size() == 0) {
-            Log.i(TAG, "done: point size is 0");
             //检索
             doSearchQuery();
             return;
         }
+        GreenDaoHelper.getInstance().insertEPoint(list);
+
         LatLngBounds.Builder bounds = LatLngBounds.builder();
         for (int i = 0; i < list.size(); i++) {
             EPoint point = list.get(i);
@@ -153,6 +162,41 @@ public class DrawLineActivity extends BaseLineActivity implements AMap.OnMapClic
             marker.setObject(point);
         }
         aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 20));
+    }
+
+    private void getLineToDrawWire() {
+        //获取该村节点
+        BmobQuery<Line> bmobQuery = new BmobQuery<Line>();
+        bmobQuery.addWhereEqualTo("VillageId", currentVillage.getObjectId());
+        bmobQuery.findObjects(new FindListener<Line>() {
+            @Override
+            public void done(List<Line> list, BmobException e) {
+                if (e == null) {
+                    int size = list.size();
+                    if (size != 0) {
+                        for (int i = 0; i < size; i++) {
+                            Line line = list.get(i);
+                            String lls = line.getLinePoint();
+                            String[] lglts = lls.split(";");
+
+                            List<LatLng> latLngs = new ArrayList<LatLng>();
+
+                            for (int j = 0; j < lglts.length; j++) {
+                                String[] ll = lglts[j].split(",");
+                                LatLng latLng = new LatLng(Double.parseDouble(ll[1]), Double.parseDouble(ll[0]));
+                                latLngs.add(latLng);
+                            }
+                            aMap.addPolyline((new PolylineOptions()).addAll(latLngs).color(
+                                    Color.RED));
+                        }
+                    }
+                } else {
+                    Toast.makeText(DrawLineActivity.this, "获取线路失败", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
     }
 
     /**
@@ -417,10 +461,14 @@ public class DrawLineActivity extends BaseLineActivity implements AMap.OnMapClic
 //            markerOption.icon(null);
             markerOption.icons(giflist).period(2);
         } else {
-            MarkerView markerView = new MarkerView(DrawLineActivity.this);
-            markerView.isPolePoint(point, beamPointId);
-            markerView.setPointNum(point.getNumber());
-            markerOption.icon(BitmapDescriptorFactory.fromView(markerView));
+            try {
+                MarkerView markerView = new MarkerView(DrawLineActivity.this);
+                markerView.isPolePoint(point, beamPointId);
+                markerView.setPointNum(point.getNumber());
+                markerOption.icon(BitmapDescriptorFactory.fromView(markerView));
+            } catch (Exception ex) {
+                Log.i(TAG, "getMarkerOptions: " + ex.getMessage());
+            }
         }
         return markerOption;
     }

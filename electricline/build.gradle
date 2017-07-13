@@ -69,6 +69,7 @@ dependencies {
     //如果你想应用能够兼容Android6.0，请添加此依赖(org.apache.http.legacy.jar)
 
     //其中latest.release指代最新版本号，也可以指定明确的版本号，例如1.0.0
+    
     compile 'com.android.support:appcompat-v7:24.2.0'
     compile 'com.android.support:support-v4:24.2.0'
     compile 'com.android.support:design:24.2.0'
@@ -77,9 +78,7 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.jakewharton:butterknife:8.5.1'
     compile 'com.tencent.bugly:crashreport_upgrade:1.2.3'
+    compile 'org.greenrobot:greendao:3.0.1'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
-
-    compile 'org.greenrobot:greendao:3.0.1'
-
 }
