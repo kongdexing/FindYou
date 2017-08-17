@@ -6,10 +6,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
+import com.android.widget.MyPermissionUtil;
 import com.android.widget.R;
 
 /**
@@ -45,6 +47,7 @@ public class AudioRecorderButton extends Button {
     private static final int MSG_VOICE_CHANGED = 0x111;
     //取消提示对话框
     private static final int MSG_DIALOG_DIMISS = 0x112;
+    private String TAG = AudioRecorderButton.class.getSimpleName();
 
     /**
      * @description 获取音量大小的线程
@@ -81,7 +84,7 @@ public class AudioRecorderButton extends Button {
                     break;
                 case MSG_VOICE_CHANGED:
                     //更新声音
-                    mDialogManager.updateVoiceLevel(mAudioManager.getVoiceLevel(7));
+                    mDialogManager.updateVoiceLevel(mAudioManager.getVoiceLevel(DialogManager.maxLevel));
                     break;
                 case MSG_DIALOG_DIMISS:
                     //取消对话框
@@ -118,7 +121,11 @@ public class AudioRecorderButton extends Button {
                     mAudioManager.prepareAudio();
                     return false;
                 } catch (Exception ex) {
-
+                    reset();
+                    Log.e(TAG, "onLongClick error : " + ex.getMessage());
+                    if (audioRecorderCallBack != null) {
+                        audioRecorderCallBack.onMediaRecorderError(ex);
+                    }
                 }
                 return true;
             }
@@ -135,14 +142,23 @@ public class AudioRecorderButton extends Button {
      * @description 录音完成后的回调
      * @time 2016/6/25 11:18
      */
-    public interface AudioFinishRecorderCallBack {
+    public interface AudioRecorderCallBack {
+
+        void onStartRecord();
+
         void onFinish(float seconds, String filePath);
+
+        void onPermissionAsk();
+
+        void onPermissionDenied();
+
+        void onMediaRecorderError(Exception ex);
     }
 
-    private AudioFinishRecorderCallBack finishRecorderCallBack;
+    private AudioRecorderCallBack audioRecorderCallBack;
 
-    public void setFinishRecorderCallBack(AudioFinishRecorderCallBack listener) {
-        finishRecorderCallBack = listener;
+    public void setAudioRecorderCallBack(AudioRecorderCallBack listener) {
+        audioRecorderCallBack = listener;
     }
 
     /**
@@ -169,7 +185,22 @@ public class AudioRecorderButton extends Button {
                 } catch (Exception ex) {
 
                 }
-                changeState(STATE_RECORDING);
+                //判断权限
+                int result = MyPermissionUtil.checkOp(this.getContext(), MyPermissionUtil.OP_RECORD_AUDIO);
+                Log.i("Chat", "permission : " + result);
+                //0 允许,4 询问,1 拒绝,-1 <4.4.4
+                if (result == 4 && audioRecorderCallBack != null) {
+                    audioRecorderCallBack.onPermissionAsk();
+                    return true;
+                } else if (result == 1 && audioRecorderCallBack != null) {
+                    audioRecorderCallBack.onPermissionDenied();
+                    return true;
+                } else {
+                    if (audioRecorderCallBack != null) {
+                        audioRecorderCallBack.onStartRecord();
+                    }
+                    changeState(STATE_RECORDING);
+                }
                 break;
             case MotionEvent.ACTION_MOVE://手指移动
                 if (isRecording) {
@@ -189,7 +220,11 @@ public class AudioRecorderButton extends Button {
                 }
                 if (!isRecording || mTime < 0.6f) {//如果时间少于0.6s，则提示录音过短
                     mDialogManager.tooShort();
-                    mAudioManager.cancel();
+                    try {
+                        mAudioManager.cancel();
+                    } catch (Exception ex) {
+                        Log.i(TAG, "onTouchEvent: " + ex.getMessage());
+                    }
                     // 延迟显示对话框
                     mHandler.sendEmptyMessageDelayed(MSG_DIALOG_DIMISS, 1000);
                 } else if (mCurrentState == STATE_RECORDING) {
@@ -197,8 +232,8 @@ public class AudioRecorderButton extends Button {
                     mDialogManager.dimissDialog();
                     mAudioManager.release();
 
-                    if (finishRecorderCallBack != null) {
-                        finishRecorderCallBack.onFinish(mTime, mAudioManager.getCurrentFilePath());
+                    if (audioRecorderCallBack != null) {
+                        audioRecorderCallBack.onFinish(mTime, mAudioManager.getCurrentFilePath());
                     }
 
                 } else if (mCurrentState == STATE_CANCEL) { // 想要取消
@@ -231,7 +266,6 @@ public class AudioRecorderButton extends Button {
         if (y < -DISTANCE_Y_CANCEL || y > getHeight() + DISTANCE_Y_CANCEL) {
             return true;
         }
-
         return false;
     }
 
@@ -250,7 +284,6 @@ public class AudioRecorderButton extends Button {
                     setBackgroundResource(R.drawable.btn_recorder_normal);
                     setText(R.string.str_recorder_normal);
                     break;
-
                 case STATE_RECORDING:
                     setBackgroundResource(R.drawable.btn_recorder_recording);
                     setText(R.string.str_recorder_recording);
@@ -258,7 +291,6 @@ public class AudioRecorderButton extends Button {
                         mDialogManager.recording();
                     }
                     break;
-
                 case STATE_CANCEL:
                     setBackgroundResource(R.drawable.btn_recorder_recording);
                     mDialogManager.wantToCancel();

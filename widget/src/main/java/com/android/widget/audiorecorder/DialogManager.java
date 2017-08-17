@@ -9,6 +9,9 @@ import android.widget.TextView;
 
 import com.android.widget.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @param
  * @author ldm
@@ -26,10 +29,19 @@ public class DialogManager {
     private TextView mLable;
     //上下文对象
     private Context mContext;
-
+    public static int maxLevel = 7;
+    private List<Integer> levelRes = new ArrayList<>();
 
     public DialogManager(Context context) {
         this.mContext = context;
+        levelRes.clear();
+        levelRes.add(R.drawable.v1);
+        levelRes.add(R.drawable.v2);
+        levelRes.add(R.drawable.v3);
+        levelRes.add(R.drawable.v4);
+        levelRes.add(R.drawable.v5);
+        levelRes.add(R.drawable.v6);
+        levelRes.add(R.drawable.v7);
     }
 
     /**
@@ -118,7 +130,8 @@ public class DialogManager {
             mLable.setVisibility(View.VISIBLE);
             if (mVoice.getVisibility() == View.VISIBLE) {
                 //设置图片的id，我们放在drawable中的声音图片是以v+数字格式的
-                int resId = mContext.getResources().getIdentifier("v" + level, "drawable", mContext.getPackageName());
+//                int resId = mContext.getResources().getIdentifier("v" + level, "drawable", mContext.getPackageName());
+                int resId = levelRes.get(level - 1);
                 mVoice.setImageResource(resId);
             }
         }

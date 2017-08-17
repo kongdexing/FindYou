@@ -1,13 +1,10 @@
 package com.android.widget.audiorecorder;
 
-import android.content.Context;
 import android.media.MediaRecorder;
-import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -17,6 +14,9 @@ import java.util.UUID;
  * @time 2016/6/25 9:39
  */
 public class AudioManager {
+
+    private String TAG = AudioManager.class.getSimpleName();
+
     //AudioRecord: 主要是实现边录边播（AudioRecord+AudioTrack）以及对音频的实时处理。
     // 优点：可以语音实时处理，可以实现各种音频的封装
     private MediaRecorder mMediaRecorder;
@@ -98,6 +98,13 @@ public class AudioManager {
         mMediaRecorder.prepare();
         // 开始，必需在prepare()后调用
         mMediaRecorder.start();
+
+        mMediaRecorder.setOnErrorListener(new MediaRecorder.OnErrorListener() {
+            @Override
+            public void onError(MediaRecorder mr, int what, int extra) {
+                Log.i(TAG, "onError: ");
+            }
+        });
         // 准备完成
         isPrepare = true;
         if (mAudioStateListener != null) {
@@ -130,6 +137,7 @@ public class AudioManager {
                 return maxlevel * mMediaRecorder.getMaxAmplitude() / 32768 + 1;//返回结果1-7之间
             } catch (Exception e) {
                 e.printStackTrace();
+                Log.i(TAG, "getVoiceLevel: " + e.getMessage());
             }
         }
         return 1;
