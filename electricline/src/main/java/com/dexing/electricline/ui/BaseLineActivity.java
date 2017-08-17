@@ -48,11 +48,12 @@ public class BaseLineActivity extends BaseActivity {
             intent.putExtra("village", currentVillage);
             this.startActivityForResult(intent, 1000);
 //            finish();
-        } else if (item.getItemId() == R.id.app_bar_draw) {
-            Intent intent = new Intent(this, DrawWireActivity.class);
-            intent.putExtra("village", currentVillage);
-            this.startActivity(intent);
         }
+//        else if (item.getItemId() == R.id.app_bar_draw) {
+//            Intent intent = new Intent(this, DrawWireActivity.class);
+//            intent.putExtra("village", currentVillage);
+//            this.startActivity(intent);
+//        }
         return super.onOptionsItemSelected(item);
     }
 
